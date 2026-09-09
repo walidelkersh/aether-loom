@@ -64,7 +64,7 @@ These experiments make the controls explicit. Wild density primarily changes fea
 
 `SlotGame.Core` is independent of UI and contains the physical strips, PCG32 abstraction, ways evaluator, state machine, bonus loop, exact analysis, and maximum analysis. The simulator and Blazor WebAssembly project both reference it. The deployed browser game therefore runs the same C# math assembly that the tests and reports exercise.
 
-The Math Inspector exposes the resolved reel set, state before and after, visible Sparks, active multiplier, stop indices, current payout, exact RTP budget, and feature probability. It never displays future outcomes.
+Analysis mode exposes the resolved reel set, state before and after, visible Sparks, active multiplier, stop indices, current payout, exact RTP budget, and feature probability. It never displays future outcomes.
 
 ## What I would change next
 

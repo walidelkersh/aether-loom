@@ -107,7 +107,7 @@ python scripts/generate_docs.py
 
 ## What I Built
 
-This repository's game concept, state mechanic, paytable, six reel sets, C# core, exact analyzer, extreme-value analyzer, simulation executable, Blazor playable, Math Inspector, tests, reports, PAR sheet, and case study were authored specifically for Aether Loom. The earlier slot simulation engine was inspected for useful boundaries and validation ideas; its Python/JavaScript implementation and independent weighted-cell outcome model were not copied into this project.
+This repository's game concept, state mechanic, paytable, six reel sets, C# core, exact analyzer, extreme-value analyzer, simulation executable, Blazor playable, Cabinet/Analysis view, tests, reports, PAR sheet, art direction, and case study were created specifically for Aether Loom. The symbol atlas and workshop backdrop were generated as original project assets from custom prompts; no third-party game art is included. The earlier slot simulation engine was inspected for useful boundaries and validation ideas; its Python/JavaScript implementation and independent weighted-cell outcome model were not copied into this project.
 
 ## Further reading
 
@@ -117,5 +117,6 @@ This repository's game concept, state mechanic, paytable, six reel sets, C# core
 - [Sensitivity analysis](docs/sensitivity-analysis.md)
 - [Portfolio case study](docs/case-study.md)
 - [Experimental Stake Engine representation](integrations/stake-engine/README.md)
+- [Visual direction and asset provenance](docs/art-direction.md)
 
 Released under the [MIT License](LICENSE). The project makes no regulatory or production-compatibility claim.

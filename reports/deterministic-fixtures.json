@@ -1,0 +1,353 @@
+[
+  {
+    "seed": 1,
+    "state": "Rest",
+    "ReelSet": "BASE_REST",
+    "Stops": [
+      17,
+      0,
+      39,
+      4,
+      2
+    ],
+    "grid": [
+      [
+        "Knot",
+        "Linen",
+        "Knot",
+        "Crown",
+        "Knot"
+      ],
+      [
+        "Linen",
+        "Linen",
+        "Dye",
+        "Knot",
+        "Shuttle"
+      ],
+      [
+        "Linen",
+        "Spark",
+        "Linen",
+        "Crown",
+        "Knot"
+      ]
+    ],
+    "ScatterCount": 1,
+    "award": 0.4,
+    "stateAfter": "Rest",
+    "FeatureTriggered": false
+  },
+  {
+    "seed": 1,
+    "state": "Taut",
+    "ReelSet": "BASE_TAUT",
+    "Stops": [
+      17,
+      0,
+      39,
+      4,
+      2
+    ],
+    "grid": [
+      [
+        "Knot",
+        "Linen",
+        "Knot",
+        "Dye",
+        "Knot"
+      ],
+      [
+        "Linen",
+        "Dye",
+        "Dye",
+        "Knot",
+        "Knot"
+      ],
+      [
+        "Shuttle",
+        "Linen",
+        "Knot",
+        "Linen",
+        "Linen"
+      ]
+    ],
+    "ScatterCount": 0,
+    "award": 0,
+    "stateAfter": "Rest",
+    "FeatureTriggered": false
+  },
+  {
+    "seed": 1,
+    "state": "Overdrive",
+    "ReelSet": "BASE_OVERDRIVE",
+    "Stops": [
+      17,
+      0,
+      39,
+      4,
+      2
+    ],
+    "grid": [
+      [
+        "Knot",
+        "Wild",
+        "Crown",
+        "Shuttle",
+        "Dye"
+      ],
+      [
+        "Shuttle",
+        "Shuttle",
+        "Wild",
+        "Knot",
+        "Wild"
+      ],
+      [
+        "Knot",
+        "Linen",
+        "Shuttle",
+        "Dye",
+        "Knot"
+      ]
+    ],
+    "ScatterCount": 0,
+    "award": 7.6,
+    "stateAfter": "Rest",
+    "FeatureTriggered": false
+  },
+  {
+    "seed": 42,
+    "state": "Rest",
+    "ReelSet": "BASE_REST",
+    "Stops": [
+      23,
+      17,
+      24,
+      35,
+      35
+    ],
+    "grid": [
+      [
+        "Dye",
+        "Linen",
+        "Linen",
+        "Dye",
+        "Knot"
+      ],
+      [
+        "Knot",
+        "Moth",
+        "Shuttle",
+        "Wild",
+        "Crown"
+      ],
+      [
+        "Dye",
+        "Knot",
+        "Knot",
+        "Knot",
+        "Dye"
+      ]
+    ],
+    "ScatterCount": 0,
+    "award": 0.8,
+    "stateAfter": "Rest",
+    "FeatureTriggered": false
+  },
+  {
+    "seed": 42,
+    "state": "Taut",
+    "ReelSet": "BASE_TAUT",
+    "Stops": [
+      23,
+      17,
+      24,
+      35,
+      35
+    ],
+    "grid": [
+      [
+        "Knot",
+        "Knot",
+        "Knot",
+        "Wild",
+        "Linen"
+      ],
+      [
+        "Linen",
+        "Moth",
+        "Knot",
+        "Linen",
+        "Wild"
+      ],
+      [
+        "Moth",
+        "Dye",
+        "Moth",
+        "Dye",
+        "Knot"
+      ]
+    ],
+    "ScatterCount": 0,
+    "award": 4.1,
+    "stateAfter": "Rest",
+    "FeatureTriggered": false
+  },
+  {
+    "seed": 42,
+    "state": "Overdrive",
+    "ReelSet": "BASE_OVERDRIVE",
+    "Stops": [
+      23,
+      17,
+      24,
+      35,
+      35
+    ],
+    "grid": [
+      [
+        "Linen",
+        "Crown",
+        "Knot",
+        "Linen",
+        "Crown"
+      ],
+      [
+        "Dye",
+        "Moth",
+        "Crown",
+        "Wild",
+        "Dye"
+      ],
+      [
+        "Spark",
+        "Dye",
+        "Crown",
+        "Linen",
+        "Knot"
+      ]
+    ],
+    "ScatterCount": 1,
+    "award": 0,
+    "stateAfter": "Rest",
+    "FeatureTriggered": false
+  },
+  {
+    "seed": 20260908,
+    "state": "Rest",
+    "ReelSet": "BASE_REST",
+    "Stops": [
+      8,
+      1,
+      27,
+      35,
+      32
+    ],
+    "grid": [
+      [
+        "Linen",
+        "Linen",
+        "Dye",
+        "Dye",
+        "Knot"
+      ],
+      [
+        "Shuttle",
+        "Spark",
+        "Crown",
+        "Wild",
+        "Dye"
+      ],
+      [
+        "Linen",
+        "Dye",
+        "Knot",
+        "Knot",
+        "Moth"
+      ]
+    ],
+    "ScatterCount": 1,
+    "award": 0,
+    "stateAfter": "Rest",
+    "FeatureTriggered": false
+  },
+  {
+    "seed": 20260908,
+    "state": "Taut",
+    "ReelSet": "BASE_TAUT",
+    "Stops": [
+      8,
+      1,
+      27,
+      35,
+      32
+    ],
+    "grid": [
+      [
+        "Knot",
+        "Dye",
+        "Knot",
+        "Wild",
+        "Linen"
+      ],
+      [
+        "Shuttle",
+        "Linen",
+        "Dye",
+        "Linen",
+        "Wild"
+      ],
+      [
+        "Crown",
+        "Wild",
+        "Wild",
+        "Dye",
+        "Spark"
+      ]
+    ],
+    "ScatterCount": 1,
+    "award": 6.3,
+    "stateAfter": "Taut",
+    "FeatureTriggered": false
+  },
+  {
+    "seed": 20260908,
+    "state": "Overdrive",
+    "ReelSet": "BASE_OVERDRIVE",
+    "Stops": [
+      8,
+      1,
+      27,
+      35,
+      32
+    ],
+    "grid": [
+      [
+        "Dye",
+        "Shuttle",
+        "Linen",
+        "Linen",
+        "Linen"
+      ],
+      [
+        "Linen",
+        "Linen",
+        "Moth",
+        "Wild",
+        "Moth"
+      ],
+      [
+        "Crown",
+        "Moth",
+        "Dye",
+        "Linen",
+        "Dye"
+      ]
+    ],
+    "ScatterCount": 0,
+    "award": 1.7999999999999998,
+    "stateAfter": "Rest",
+    "FeatureTriggered": false
+  }
+]

@@ -1,0 +1,283 @@
+{
+  "generatedAtUtc": "2026-09-09T08:29:27.735775+00:00",
+  "Version": "1.0.0",
+  "GameName": "Aether Loom",
+  "exact": {
+    "BaseRtp": 0.8043164153159941,
+    "FeatureRtp": 0.1613527330186247,
+    "TotalRtp": 0.9656691483346188,
+    "FeatureTriggerProbability": 0.004206244043355317,
+    "BaseHitProbability": 0.6482098585069458,
+    "stationaryStateProbabilities": [
+      0.9321163470123953,
+      0.06296151368368005,
+      0.0049221393039246405
+    ],
+    "transitionMatrix": [
+      [
+        0.9554807617187523,
+        0.04451923828125008,
+        0
+      ],
+      [
+        0.5809099609375015,
+        0.34091308593750075,
+        0.07817695312500013
+      ],
+      [
+        1.000000000000002,
+        0,
+        0
+      ]
+    ],
+    "reelSets": {
+      "BASE_REST": {
+        "ReelSet": "BASE_REST",
+        "ExpectedWaysAward": 0.7910498627929692,
+        "BaseHitProbability": 0.647859375,
+        "SymbolContributions": {
+          "Crown": 0.0419080078125,
+          "Moth": 0.061236000000000054,
+          "Shuttle": 0.07249368164062507,
+          "Dye": 0.09015300000000002,
+          "Linen": 0.12285738281250003,
+          "Knot": 0.40240179052734404
+        },
+        "ScatterProbabilities": [
+          0.6771870800781267,
+          0.2745353027343756,
+          0.04451923828125008,
+          0.0036096679687500056,
+          0.00014633789062500017,
+          2.3730468750000016E-06,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "FeatureTriggerProbability": 0.0037583789062500057,
+        "EscalationProbability": 0.04827761718750009
+      },
+      "BASE_TAUT": {
+        "ReelSet": "BASE_TAUT",
+        "ExpectedWaysAward": 0.9724699160156256,
+        "BaseHitProbability": 0.649046875,
+        "SymbolContributions": {
+          "Crown": 0.07303668750000006,
+          "Moth": 0.0998451562500001,
+          "Shuttle": 0.11549250000000011,
+          "Dye": 0.13001544140625004,
+          "Linen": 0.14475585937500016,
+          "Knot": 0.40932427148437517
+        },
+        "ScatterProbabilities": [
+          0.5718248828125014,
+          0.34091308593750075,
+          0.07817695312500013,
+          0.00861679687500001,
+          0.0004587890625000004,
+          9.492187500000003E-06,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "FeatureTriggerProbability": 0.00908507812500001,
+        "EscalationProbability": 0.08726203125000015
+      },
+      "BASE_OVERDRIVE": {
+        "ReelSet": "BASE_OVERDRIVE",
+        "ExpectedWaysAward": 1.1656982109375007,
+        "BaseHitProbability": 0.703875,
+        "SymbolContributions": {
+          "Crown": 0.11575659375000007,
+          "Moth": 0.15592500000000017,
+          "Shuttle": 0.16848870117187506,
+          "Dye": 0.18225000000000013,
+          "Linen": 0.1733273437500001,
+          "Knot": 0.3699505722656252
+        },
+        "ScatterProbabilities": [
+          0.44370531250000106,
+          0.3915046875000007,
+          0.13817812500000018,
+          0.02438437500000002,
+          0.0021515625000000007,
+          7.59375E-05,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "FeatureTriggerProbability": 0.026611875000000024,
+        "EscalationProbability": 0.16479000000000021
+      },
+      "BONUS_REST": {
+        "ReelSet": "BONUS_REST",
+        "ExpectedWaysAward": 1.1656982109375007,
+        "BaseHitProbability": 0.703875,
+        "SymbolContributions": {
+          "Crown": 0.11575659375000007,
+          "Moth": 0.15592500000000017,
+          "Shuttle": 0.16848870117187506,
+          "Dye": 0.18225000000000013,
+          "Linen": 0.1733273437500001,
+          "Knot": 0.3699505722656252
+        },
+        "ScatterProbabilities": [
+          0.44370531250000106,
+          0.3915046875000007,
+          0.13817812500000018,
+          0.02438437500000002,
+          0.0021515625000000007,
+          7.59375E-05,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "FeatureTriggerProbability": 0.026611875000000024,
+        "EscalationProbability": 0.16479000000000021
+      },
+      "BONUS_TAUT": {
+        "ReelSet": "BONUS_TAUT",
+        "ExpectedWaysAward": 2.013945082031251,
+        "BaseHitProbability": 0.75178125,
+        "SymbolContributions": {
+          "Crown": 0.2696445703125003,
+          "Moth": 0.3200765625000001,
+          "Shuttle": 0.33748365234375033,
+          "Dye": 0.3570277500000003,
+          "Linen": 0.22397512500000022,
+          "Knot": 0.505737421875
+        },
+        "ScatterProbabilities": [
+          0.44370531250000106,
+          0.3915046875000007,
+          0.13817812500000018,
+          0.02438437500000002,
+          0.0021515625000000007,
+          7.59375E-05,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "FeatureTriggerProbability": 0.026611875000000024,
+        "EscalationProbability": 0.16479000000000021
+      },
+      "BONUS_OVERDRIVE": {
+        "ReelSet": "BONUS_OVERDRIVE",
+        "ExpectedWaysAward": 3.2774041757812533,
+        "BaseHitProbability": 0.832765625,
+        "SymbolContributions": {
+          "Crown": 0.5178102187500004,
+          "Moth": 0.6082593750000019,
+          "Shuttle": 0.6035280468750001,
+          "Dye": 0.6191640000000003,
+          "Linen": 0.30721275000000026,
+          "Knot": 0.6214297851562505
+        },
+        "ScatterProbabilities": [
+          0.44370531250000106,
+          0.3915046875000007,
+          0.13817812500000018,
+          0.02438437500000002,
+          0.0021515625000000007,
+          7.59375E-05,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "FeatureTriggerProbability": 0.026611875000000024,
+        "EscalationProbability": 0.16479000000000021
+      }
+    },
+    "features": [
+      {
+        "StartingStage": "Rest",
+        "ExpectedAward": 32.431583071510175,
+        "ExpectedSpins": 8.370532008162368
+      },
+      {
+        "StartingStage": "Taut",
+        "ExpectedAward": 61.46708984308379,
+        "ExpectedSpins": 8.370532008162368
+      },
+      {
+        "StartingStage": "Overdrive",
+        "ExpectedAward": 96.01765794971692,
+        "ExpectedSpins": 8.370532008162368
+      }
+    ]
+  },
+  "simulation": {
+    "PaidSpins": 10000000,
+    "Seed": 20260908,
+    "TotalWager": 10000000,
+    "TotalPayout": 9663897.714952786,
+    "ObservedRtp": 0.9663897714952786,
+    "BaseRtp": 0.8049968739917345,
+    "FeatureRtp": 0.16139289749999935,
+    "HitFrequency": 0.6510934,
+    "BaseHitFrequency": 0.6483874,
+    "FeatureTriggers": 42060,
+    "FeatureFrequency": 0.004206,
+    "FreeSpinsPlayed": 352061,
+    "FreeSpinFrequency": 0.0352061,
+    "FreeSpinsPerTrigger": 8.370446980504042,
+    "AverageWin": 1.4842567464134617,
+    "Variance": 15.018659383842408,
+    "StandardDeviation": 3.87539151362058,
+    "VolatilityIndex": 3.87539151362058,
+    "MaximumObservedWin": 731.7875,
+    "RtpConfidenceHalfWidth95": 0.0024019926656536185,
+    "StateVisits": [
+      9322129,
+      628812,
+      49059
+    ],
+    "FeatureStarts": [
+      34900,
+      5816,
+      1344
+    ]
+  }
+}

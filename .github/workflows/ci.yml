@@ -1,0 +1,40 @@
+name: validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  math-and-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Build
+        run: dotnet build AetherLoom.sln --configuration Release
+      - name: Unit, invariant, and statistical tests
+        run: dotnet test AetherLoom.sln --configuration Release --no-build
+      - name: Stake representation parity
+        run: python integrations/stake-engine/parity_check.py
+
+  playable-flow:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Start playable
+        run: dotnet run --project src/SlotGame.Playable --configuration Release --urls http://127.0.0.1:5098 > /tmp/aether-loom.log 2>&1 &
+      - name: Wait for playable
+        run: for i in {1..60}; do curl -fsS http://127.0.0.1:5098/ >/dev/null && exit 0; sleep 1; done; cat /tmp/aether-loom.log; exit 1
+      - run: npm run test:e2e

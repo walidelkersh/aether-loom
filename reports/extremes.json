@@ -1,0 +1,59 @@
+{
+  "ReelSets": {
+    "BASE_REST": {
+      "ReelSet": "BASE_REST",
+      "MaximumAnyAward": 49.6,
+      "MaximumBelowTwoScatters": 49.6,
+      "MaximumAtLeastTwoScatters": 32.2,
+      "MaximumBelowThreeScatters": 49.6,
+      "MaximumAtLeastThreeScatters": 16.2
+    },
+    "BASE_TAUT": {
+      "ReelSet": "BASE_TAUT",
+      "MaximumAnyAward": 42.4,
+      "MaximumBelowTwoScatters": 42.4,
+      "MaximumAtLeastTwoScatters": 18.4,
+      "MaximumBelowThreeScatters": 42.4,
+      "MaximumAtLeastThreeScatters": 8
+    },
+    "BASE_OVERDRIVE": {
+      "ReelSet": "BASE_OVERDRIVE",
+      "MaximumAnyAward": 88,
+      "MaximumBelowTwoScatters": 88,
+      "MaximumAtLeastTwoScatters": 40.6,
+      "MaximumBelowThreeScatters": 88,
+      "MaximumAtLeastThreeScatters": 20.6
+    },
+    "BONUS_REST": {
+      "ReelSet": "BONUS_REST",
+      "MaximumAnyAward": 88,
+      "MaximumBelowTwoScatters": 88,
+      "MaximumAtLeastTwoScatters": 40.6,
+      "MaximumBelowThreeScatters": 88,
+      "MaximumAtLeastThreeScatters": 20.6
+    },
+    "BONUS_TAUT": {
+      "ReelSet": "BONUS_TAUT",
+      "MaximumAnyAward": 221.5,
+      "MaximumBelowTwoScatters": 221.5,
+      "MaximumAtLeastTwoScatters": 101.5,
+      "MaximumBelowThreeScatters": 221.5,
+      "MaximumAtLeastThreeScatters": 52
+    },
+    "BONUS_OVERDRIVE": {
+      "ReelSet": "BONUS_OVERDRIVE",
+      "MaximumAnyAward": 406,
+      "MaximumBelowTwoScatters": 406,
+      "MaximumAtLeastTwoScatters": 72,
+      "MaximumBelowThreeScatters": 406,
+      "MaximumAtLeastThreeScatters": 36
+    }
+  },
+  "MaximumFeatureAwards": {
+    "Rest": 10921.225,
+    "Taut": 11132.625,
+    "Overdrive": 11207
+  },
+  "MaximumBaseAward": 88,
+  "MaximumGameCycleAward": 11227.6
+}

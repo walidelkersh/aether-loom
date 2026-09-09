@@ -1,0 +1,209 @@
+\documentclass[10pt]{article}
+\usepackage[margin=0.68in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{xcolor,array,longtable,hyperref,fancyhdr,graphicx}
+\definecolor{ink}{HTML}{142018}
+\definecolor{acid}{HTML}{6A8A15}
+\definecolor{soft}{HTML}{EEF3E8}
+\hypersetup{colorlinks=true,linkcolor=acid,urlcolor=acid}
+\pagestyle{fancy}\fancyhf{}\lhead{AETHER LOOM}\rhead{PORTFOLIO PAR SHEET · v1.0.0}\cfoot{\thepage}
+\setlength{\parindent}{0pt}\setlength{\parskip}{5pt}
+\newcommand{\sectionbar}[1]{\vspace{8pt}{\color{acid}\rule{\linewidth}{1.5pt}}\vspace{-5pt}\section*{#1}}
+\newcommand{\metric}[2]{\begin{minipage}[t]{0.47\linewidth}\colorbox{soft}{\parbox{0.94\linewidth}{\small #1\\[2pt]{\Large\bfseries #2}}}\end{minipage}}
+\begin{document}
+
+\begin{titlepage}
+\color{ink}
+\vspace*{1.1in}
+{\small\ttfamily ORIGINAL 5×3 SLOT MATHEMATICS PROJECT}\par
+\vspace{0.3in}
+{\fontsize{46}{48}\selectfont\bfseries AETHER\\LOOM}\par
+\vspace{0.22in}{\color{acid}\rule{2.3in}{5pt}}\par
+\vspace{0.5in}
+{\Large Portfolio / Demonstration PAR Sheet}\par
+\vspace{0.2in}
+{\large Physical reel strips · 243 ways · persistent Markov state · finite bonus reward process}\par
+\vfill
+\metric{Exact total RTP}{96.566915\%}\hfill\metric{Exact feature frequency}{1 in 237.74}\par\vspace{12pt}
+\metric{10M-spin observed RTP}{96.638977\%}\hfill\metric{Exact maximum cycle}{11,227.60×}\par
+\vfill
+{\small\bfseries Demonstration notice}\par
+{\small This document describes a fictional-credit portfolio game. It is not a regulatory submission, certification, gambling product, or claim of production approval. Exact values are computed from model version 1.0.0; simulation values are identified separately.}
+\end{titlepage}
+
+\sectionbar{1. Game overview}
+\begin{tabular}{>{\bfseries}p{0.27\linewidth}p{0.68\linewidth}}
+Game & Aether Loom \\
+Format & 5 reels × 3 rows; 243 ways \\
+Bet & 0.20, 0.50, 1, 2, 5, or 10 fictional credits \\
+Win direction & Consecutive reels from reel 1; longest occurrence per symbol \\
+Original mechanic & Paid-spin outcomes move a persistent Tension state. The state selects the next physical reel set and becomes the bonus starting stage. \\
+Bonus & Weave Ascending: 7 initial free spins, maximum 12; two or more Sparks advance the stage and add one spin. \\
+Maximum intended win & 11,227.60× bet, exact reachable game-cycle maximum \\
+Jackpot & None \\
+\end{tabular}
+
+\textbf{Intended experience.} Rest is the stable default. Two Sparks create visible anticipation by moving the loom to Taut, and a second two-Spark result reaches a brief Overdrive spin. The feature inherits earned tension and increases in volatility through richer Wild strips and multipliers of 1×, 1.75×, and 3.5×. The controlling parameters are the exact two-Spark transition probability, state-specific strip composition, and stage multiplier schedule.
+
+\sectionbar{2. Symbols and paytable}
+All pays are multiples of total bet. Wild substitutes for all six regular symbols, has no direct pay, and never appears on reel 1. Spark has no cash pay.
+
+\begin{center}\begin{tabular}{l l r r r l}
+\hline
+Code & Symbol & 3 reels & 4 reels & 5 reels & Role\\\hline
+A & Crown Spool & 0.40 & 1.20 & 4.00 & High\\
+B & Silk Moth & 0.30 & 0.90 & 2.50 & High\\
+C & Copper Shuttle & 0.20 & 0.60 & 1.50 & Medium\\
+D & Dye Vial & 0.15 & 0.40 & 1.00 & Medium\\
+E & Linen Roll & 0.10 & 0.25 & 0.60 & Low\\
+F & Weaver's Knot & 0.07 & 0.15 & 0.40 & Low\\
+W & Aether Wild & -- & -- & -- & Substitute\\
+X & Spark & -- & -- & -- & Scatter/state\\\hline
+\end{tabular}\end{center}
+
+For each paying symbol, matching instances on a reel include that symbol and Wild. Ways equal the product of the matching counts across the consecutive reels. Different symbol wins are added. Reel 1 contains no Wild, preventing an all-Wild starting ambiguity.
+
+\sectionbar{3. Reel architecture and restrictions}
+There are six named reel sets. Every reel is a circular ordered strip with 40 stops. The uniformly sampled stop is the top visible symbol and the following two positions are the middle and bottom. Wild and Spark occurrences are separated by at least three circular positions, so a three-row window contains at most one of each special per reel.
+
+\begin{center}\begin{tabular}{l l c l}
+\hline Set & Use & Stops/reel & Restriction\\\hline
+BASE\_REST & Paid state 0 & 40 & 1 Spark/reel; 0 Wild on R1\\
+BASE\_TAUT & Paid state 1 & 40 & 1--2 Sparks/reel; 0 Wild on R1\\
+BASE\_OVERDRIVE & Paid state 2 & 40 & 2 Sparks/reel; 4 Wilds on R2--R5\\
+BONUS\_REST & Feature stage 0 & 40 & 2 Sparks/reel; 4 Wilds on R2--R5\\
+BONUS\_TAUT & Feature stage 1 & 40 & 2 Sparks/reel; 6 Wilds on R2--R5\\
+BONUS\_OVERDRIVE & Feature stage 2 & 40 & 2 Sparks/reel; 8 Wilds on R2--R5\\\hline
+\end{tabular}\end{center}
+
+\sectionbar{4. Persistent Tension mathematics}
+After a paid spin: 3+ Sparks trigger the feature and reset to Rest afterward; an Overdrive paid spin vents to Rest; exactly 2 Sparks move Rest→Taut or Taut→Overdrive; 0 Sparks lower tension one step; 1 Spark holds.
+
+\begin{center}\begin{tabular}{l r r r}
+\hline Current & Next Rest & Next Taut & Next Overdrive\\\hline
+Rest & 95.5481\% & 4.4519\% & 0.0000\%\\
+Taut & 58.0910\% & 34.0913\% & 7.8177\%\\
+Overdrive & 100.0000\% & 0.0000\% & 0.0000\%\\\hline
+Stationary mix & 93.2116\% & 6.2962\% & 0.4922\%\\\hline
+\end{tabular}\end{center}
+
+The transition matrix comes from exact scatter-count polynomials for each active strip set. The stationary vector weights base EV and state-conditioned feature entry in the long-run model.
+
+\sectionbar{5. Weave Ascending feature mathematics}
+The trigger is 3+ Sparks on a paid spin. The feature inherits the triggering paid-spin state, begins with seven spins, and ends after the queue is empty or 12 spins have played. On each feature spin, 2+ Sparks add one spin and advance one stage, capped at Overdrive.
+
+\begin{center}\begin{tabular}{l r r r}
+\hline Starting stage & Multiplier & Exact expected award & Exact expected spins\\\hline
+Rest & 1.00× & 32.431583× & 8.370532\\
+Taut & 1.75× & 61.467090× & 8.370532\\
+Overdrive & 3.50× & 96.017658× & 8.370532\\\hline
+Trigger-weighted & -- & 38.360288× & 8.370532\\\hline
+\end{tabular}\end{center}
+
+The feature is a finite Markov reward process indexed by current stage, spins remaining, and spins played. Exact stage EV is added to the probability-weighted next-state values. This recursion terminates at the 12-spin bound.
+
+\sectionbar{6. RTP allocation}
+\begin{center}\begin{tabular}{l r l}
+\hline Component & Exact RTP & Method\\\hline
+Base 243-ways wins & 80.431642\% & exact window-count enumeration\\
+Weave Ascending & 16.135273\% & exact trigger weighting + reward recursion\\
+Scatter cash awards & 0.000000\% & rule: no direct pay\\
+Jackpots & 0.000000\% & not used\\\hline
+Total & \textbf{96.566915\%} & component sum\\\hline
+\end{tabular}\end{center}
+
+\sectionbar{7. Simulation methodology and statistics}
+The independent Monte Carlo executable ran 10,000,000 paid spins with PCG32 seed 20260908. Each paid cycle includes any triggered feature. Welford's online recurrence accumulates payout mean and variance without storing outcomes. The RTP interval uses sample variance: $\bar{x}\pm1.96s/\sqrt{N}$.
+
+\begin{center}\begin{tabular}{l r@{\qquad}l r}
+\hline Total wager & 10,000,000 & Total payout & 9,663,897.70\\
+Observed RTP & 96.638977\% & 95\% CI & 96.398778--96.879176\%\\
+Overall hit frequency & 65.109340\% & Base hit frequency & 64.838740\%\\
+Feature frequency & 0.420600\% & Feature triggers & 42,060\\
+Free spins / paid spin & 3.520610\% & Mean spins / feature & 8.370447\\
+Average non-zero award & 1.484257× & Free spins played & 352,061\\
+Variance & 15.018659 bet$^2$ & Standard deviation & 3.875392× bet\\
+Maximum observed & 731.79× & Exact maximum & 11,227.60×\\\hline
+\end{tabular}\end{center}
+
+\sectionbar{8. Exact versus simulation}
+\begin{center}\begin{tabular}{l r r r}
+\hline Quantity & Exact & Simulation & Error (pp)\\\hline
+Base ways RTP & 80.431642\% & 80.499687\% & +0.068046\\
+Feature RTP & 16.135273\% & 16.139290\% & +0.004016\\
+Total RTP & 96.566915\% & 96.638977\% & +0.072062\\
+Base hit probability & 64.820986\% & 64.838740\% & +0.017754\\
+Feature-entry probability & 0.420624\% & 0.420600\% & -0.000024\\\hline
+\end{tabular}\end{center}
+
+The exact total lies inside the observed 95\% interval. Conditional feature award is 38.360288× exact and 38.372063× simulated. Mean feature duration is 8.370532 exact and 8.370447 simulated. No discrepancy was hidden or corrected after simulation.
+
+\sectionbar{9. Sensitivity analysis}
+Each row changes one parameter family; RTP, feature rate, and maximum are recalculated exactly. Hit rate and $\sigma$ use 500,000 spins per row.
+
+\scriptsize\begin{center}\begin{tabular}{l l r r r r r}
+\hline Parameter & Level & Exact RTP & Feature & Sim hit & Sim $\sigma$ & Exact max\\\hline
+Baseline & configured & 96.5669\% & 0.4206\% & 65.0204\% & 3.8526 & 11,227.60×\\
+Bonus Wilds/reel & -1 & 93.2367\% & 0.4206\% & 65.1110\% & 3.1828 & 11,227.60×\\
+Bonus Wilds/reel & +1 & 100.7503\% & 0.4206\% & 65.1908\% & 4.6621 & 11,563.60×\\
+Base Spark density & lower & 95.3858\% & 0.0000\% & 70.0614\% & 1.5150 & 11,227.15×\\
+Base Spark density & higher & 212.2207\% & 3.1288\% & 61.7292\% & 11.0465 & 11,247.30×\\
+Stage multipliers & 1/1.5/3 & 94.5155\% & 0.4206\% & 65.0882\% & 3.3200 & 9,626.60×\\
+Stage multipliers & 1/2/4 & 98.6183\% & 0.4206\% & 65.1176\% & 4.3843 & 12,828.60×\\
+Initial free spins & 6 & 93.3031\% & 0.4206\% & 65.0942\% & 3.3410 & 10,058.60×\\
+Initial free spins & 8 & 99.9501\% & 0.4206\% & 65.1670\% & 4.5126 & 12,396.60×\\\hline
+\end{tabular}\end{center}\normalsize
+
+The high Spark case is a boundary experiment that demonstrates why feature frequency and stationary state occupancy must be designed together; it is not a candidate configuration.
+
+\sectionbar{10. Ordered reel strips}
+Code map: A Crown, B Moth, C Shuttle, D Dye, E Linen, F Knot, W Wild, X Spark. These strings are canonical and circular.
+
+\scriptsize\ttfamily
+\textbf{BASE\_REST}\par
+R1 FEFBCDEBECEECAFFBFEECFBDFDFDACXFFDFDFFAE\par
+R2 EEXDFCFABEDEFDWDBEBFAFEFADWEEFCDFFBCCFCF\par
+R3 DEBDFCFFAAFFCEBCWEFFEDDBECFDAFEXCEDWAFBF\par
+R4 DECBAFAFFCEEFFBEECBDFEDFWBDFCEXBACFDWFDF\par
+R5 EDFCFEECFBFDCEXWECAFCFFAFCDBEEDWFDBFADBF\par\medskip
+\textbf{BASE\_TAUT}\par
+R1 DCDCFDFBFCABFEAEFFECFBFFEBDEDEACFFDEFEFX\par
+R2 EDEWDFEFCEECABDEFFBDFDWBFWFFACFDCAEXCBXF\par
+R3 DFACFEEFWEDCCDCWEBAECBEBFFBFDWFAFDFXDAEF\par
+R4 WCFBDFEBWEFBCDAAECXFCFCBFEDXFFEADFFWEDDB\par
+R5 FBFFEFDCDCFBDAAEBCACFFDWCFDCDEEFEWXEWFEB\par\medskip
+\textbf{BASE\_OVERDRIVE / BONUS\_REST}\par
+R1 BDBFFAFXDEADCEDFCFCFFBEEDXFDABFFEECEFECF\par
+R2 WCEBXDWBFEFEACFAFABDCDEFEEFCBWEFDCWDFDXF\par
+R3 WCBFFCCXDDFADEWXFBDFFEDEFAAEBDWFEFCEWBCA\par
+R4 CFXBCFDECFWCADEEFWBDFADBAEDFBBXCFWFEWEDF\par
+R5 WEDWFDCBWFEFCECBXFCDCFCFDFAEXFAWEBDADFBE\par\medskip
+\textbf{BONUS\_TAUT}\par
+R1 FXFCFFBBEDAFEAEDFDEEDCEFFDCEDFXFFEBCBCAF\par
+R2 FFWXDAAWBEFWFCADBCEXWEDEDECCFWFCFEFDDWBB\par
+R3 EFBWCDBCFBWXAWFEAWECEBWFFAAWDDXFCDFDEFCD\par
+R4 WDFDBFBCEBEFFDWBDACWFACDWFEXCBWEFCFWDXAE\par
+R5 WDCEBBAAWCDBWCFCFWFDFWAXECDCDFFEWXFFBEED\par\medskip
+\textbf{BONUS\_OVERDRIVE}\par
+R1 DFDDAFXCCXFEFCFEBCDFFBAEFEEFFCDDEEAFFEBB\par
+R2 BADWDDWDAFDWBFCWBBFCWEEWCFEXEFXECCWAFDWF\par
+R3 EXFCAFAFWBBWDFFDBCAWCEWAEWDBCFWXEDDWFDCW\par
+R4 WFEWCEWBCXEDWDEDDACFAFWCXWCDWFBWBFFAFDBB\par
+R5 EWFXFBFCECWDEWDCWECAAFDXDWFBWBFWDAWCFBCD\par
+\normalfont\normalsize
+
+Full per-reel count tables are included in \href{https://github.com/walidelkersh/aether-loom/blob/main/docs/reel-strips.md}{docs/reel-strips.md}.
+
+\sectionbar{11. Version and reproducibility}
+\begin{tabular}{>{\bfseries}p{0.3\linewidth}p{0.63\linewidth}}
+Game/model version & 1.0.0\\
+Configuration hash & SHA-256 prefix 6045448975a0\\
+Canonical config & config/game-config.json\\
+Canonical engine & SlotGame.Core (C\# / .NET 8)\\
+Exact analyzer & SlotGame.Core.ExactAnalyzer + ExtremeAnalyzer\\
+Monte Carlo & SlotGame.Simulation; seed 20260908\\
+Report classification & Portfolio / demonstration PAR sheet\\
+\end{tabular}
+
+\vfill\small Source, tests, generated reports, and playable build: \url{https://github.com/walidelkersh/aether-loom}
+\end{document}

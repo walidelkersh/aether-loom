@@ -2,7 +2,7 @@
 
 # Aether Loom
 
-[**PLAY LIVE**](https://walidelkersh.github.io/aether-loom/) · [**VIEW PAR SHEET**](docs/PAR-sheet.pdf) · [**READ THE MATH**](docs/math-report.md) · [**INSPECT REEL STRIPS**](docs/reel-strips.md)
+[**PLAY LIVE**](https://walidelkersh.github.io/aether-loom/) · [**PORTFOLIO CASE STUDY**](https://walidelkersh.vercel.app/projects/aether-loom) · [**VIEW PAR SHEET**](docs/PAR-sheet.pdf) · [**READ THE MATH**](docs/math-report.md) · [**INSPECT REEL STRIPS**](docs/reel-strips.md)
 
 Aether Loom is an original 5×3, 243-ways slot mathematics portfolio project. Two Spark symbols tighten a persistent loom state; the resulting Rest, Taut, or Overdrive state selects the next ordered reel set and becomes the starting stage of a seven-spin bonus. In the bonus, two Sparks advance the stage, add a spin, and move play toward richer Wild strips and larger multipliers, with a hard limit of 12 feature spins.
 

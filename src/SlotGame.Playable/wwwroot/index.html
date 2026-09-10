@@ -8,6 +8,10 @@
     <meta name="description" content="Play Aether Loom, an original 5x3 slot mathematics portfolio project with physical reel strips and a persistent Markov-state mechanic." />
     <meta name="theme-color" content="#080b0a" />
     <base href="./" />
+    <link rel="icon" href="images/loom-mark.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" as="image" href="images/symbols-atlas.webp" />
     <link rel="stylesheet" href="css/aether-loom.css" />
 </head>
 
@@ -17,7 +21,7 @@
             <circle r="40%" cx="50%" cy="50%" />
             <circle r="40%" cx="50%" cy="50%" />
         </svg>
-        <div class="loading-progress-text"></div>
+        <div class="loading-progress-text" role="status" aria-label="Loading Aether Loom"></div>
     </div>
 
     <div id="blazor-error-ui">

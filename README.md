@@ -76,6 +76,7 @@ flowchart LR
 - `src/SlotGame.Playable` — browser client that references `SlotGame.Core` directly.
 - `tests/SlotGame.Tests` — 27 unit, invariant, deterministic, and statistical tests.
 - `tests/e2e` — recruiter-flow browser test.
+- The cabinet includes optional sound, quick play, keyboard controls, and a labeled feature preview using separate randomness and no balance changes.
 - `integrations/stake-engine` — experimental public-SDK representation and nine-fixture parity check.
 
 The [existing-work assessment](docs/architecture-assessment.md) explains what was inspected and why the previous weighted-cell simulator was not reused as the canonical model.
@@ -118,5 +119,6 @@ This repository's game concept, state mechanic, paytable, six reel sets, C# core
 - [Portfolio case study](docs/case-study.md)
 - [Experimental Stake Engine representation](integrations/stake-engine/README.md)
 - [Visual direction and asset provenance](docs/art-direction.md)
+- [Cabinet interaction and verification notes](docs/playable-polish.md)
 
 Released under the [MIT License](LICENSE). The project makes no regulatory or production-compatibility claim.

@@ -6,7 +6,7 @@
     <header class="masthead">
         <a class="wordmark" href="./" aria-label="Aether Loom home"><span class="mark">AL</span><span>Walid Elkersh <small>game mathematics portfolio</small></span></a>
         <nav aria-label="Project links">
-            <button @onclick="() => _showPays = true">Pays &amp; rules</button>
+            <button @onclick="OpenRules">Pays &amp; rules</button>
             <a href="https://github.com/walidelkersh/aether-loom/blob/main/docs/PAR-sheet.pdf" target="_blank">PAR sheet</a>
             <a href="https://github.com/walidelkersh/aether-loom" target="_blank">Source</a>
         </nav>
@@ -16,26 +16,31 @@
         <div class="title-lockup">
             <p>AN ORIGINAL 243-WAYS GAME</p>
             <h1><span>AETHER</span> LOOM</h1>
-            <div class="title-rule"><i></i><b>THE TENSION WEAVES THE ODDS</b><i></i></div>
+            <div class="title-rule"><i></i><b>A WORKSHOP OF LIGHT &amp; CHANCE</b><i></i></div>
         </div>
 
         <div class="tension-ladder" aria-label="Tension state @_displayStage">
             @foreach (var stage in Enum.GetValues<TensionState>())
             {
                 <div class="tension-step @((int)stage <= (int)_displayStage ? "active" : "") @((int)stage == (int)_displayStage ? "current" : "")">
-                    <small>STAGE @((int)stage + 1)</small><strong>@stage</strong><span>@_configuration.StageMultiplier(stage).ToString("0.##")×</span>
+                    <small>@(_isBonus ? "FREE SPIN STAGE" : "TENSION") @((int)stage + 1)</small><strong>@stage</strong><span>@_configuration.StageMultiplier(stage).ToString("0.##")× <em>in feature</em></span>
                 </div>
             }
         </div>
 
         <div class="machine-card">
             <div class="machine-toolbar">
-                <div class="reel-status"><span class="status-lamp"></span><strong>@CurrentReelSet</strong><small>40 stops / reel</small></div>
+                <div class="reel-status"><span class="status-lamp"></span><strong>@(_showInspector ? CurrentReelSet : _isBonus ? "Weave Ascending" : "243 ways")</strong><small>@(_showInspector ? "C# model v" + _configuration.Version : "Left to right")</small></div>
                 <div class="mode-switch" role="group" aria-label="Display mode">
                     <button class="@(!_showInspector ? "active" : "")" @onclick="() => _showInspector = false" aria-pressed="@(!_showInspector)">Cabinet</button>
                     <button class="@(_showInspector ? "active" : "")" @onclick="() => _showInspector = true" aria-pressed="@_showInspector">Analysis</button>
                 </div>
             </div>
+
+            @if (_preview)
+            {
+                <div class="preview-label" role="status">FEATURE PREVIEW · REPLAY SEED 42 · NO WAGER OR BALANCE CHANGES</div>
+            }
 
             @if (_featureBanner is not null)
             {
@@ -45,11 +50,11 @@
             @if (!_showInspector)
             {
                 <div class="reel-bezel">
-                    <div class="reel-frame @(_spinning ? "is-spinning" : "")">
+                    <div class="reel-frame @(_rolling ? "is-spinning" : "")" aria-busy="@_rolling">
                         @for (var reel = 0; reel < 5; reel++)
                         {
                             var reelIndex = reel;
-                            <div class="reel" style="--delay: @(reel * 55)ms">
+                            <div class="reel @(reel < _settled ? "settled" : "rolling")" style="--delay: @(reel * 55)ms">
                                 @for (var row = 0; row < 3; row++)
                                 {
                                     var symbol = _grid[row, reel];
@@ -81,7 +86,7 @@
                         <dl class="live-state">
                             <div><dt>Reel set</dt><dd>@CurrentReelSet</dd></div>
                             <div><dt>Stops</dt><dd>@StopIndices</dd></div>
-                            <div><dt>State</dt><dd>@(_currentBase?.StateBefore.ToString() ?? _state.ToString()) → @(_currentBase?.StateAfter.ToString() ?? "—")</dd></div>
+                            <div><dt>Paid state / next spin</dt><dd>@(_currentBase?.StateBefore.ToString() ?? _state.ToString()) → @_state</dd></div>
                             <div><dt>Sparks / multiplier</dt><dd>@(_currentSpin?.ScatterCount.ToString() ?? "—") / @(_currentSpin?.StageMultiplier.ToString("0.##") ?? "1")×</dd></div>
                         </dl>
                     </div>
@@ -94,20 +99,37 @@
                             <div><small>Feature entry</small><strong>1 in @((1 / _theory.FeatureTriggerProbability).ToString("0.00"))</strong></div>
                             <div><small>Base hit rate</small><strong>@_theory.BaseHitProbability.ToString("P4")</strong></div>
                             <div><small>Current award</small><strong>@_lastAward.ToString("0.00") cr</strong></div>
-                            <div><small>Maximum cycle</small><strong>11,227.60×</strong></div>
+                            <div><small>Next paid spin entry</small><strong>@NextEntryProbability.ToString("P4")</strong></div>
                         </div>
-                        <p class="inspector-note">All figures shown here are calculated from the implemented strips. The view exposes completed state only; future stops remain hidden.</p>
+                        <p class="inspector-note">Long-run RTP averages the three tension states. Next-spin entry is conditional on @_state. Both come from the configured strips.</p>
+                        <div class="session-strip"><span>Paid spins <b>@_sessionSpins</b></span><span>Session return <b>@(_sessionWager > 0 ? (_sessionPayout / _sessionWager).ToString("P2") : "—")</b></span></div>
+                        <p class="inspector-note">Session return is observed, not theoretical. Previews are excluded.</p>
                     </div>
                 </section>
             }
 
-            <div class="win-readout"><span>@_message</span><strong>@_lastAward.ToString("0.00") <small>credits</small></strong></div>
+            <div class="win-readout" role="status" aria-live="polite"><span>@_message</span><strong>@_lastAward.ToString("0.00##") <small>credits</small></strong></div>
+            @if (!_rolling && _currentSpin?.Wins.Count > 0)
+            {
+                <div class="win-lines" aria-label="Winning ways">
+                    @foreach (var win in _currentSpin.Wins)
+                    {
+                        <span><i class="pay-art art-@ArtClass(win.Symbol)"></i>@win.Ways ways · @win.ReelsMatched reels <b>@win.Award(_currentSpin.Bet, _currentSpin.StageMultiplier).ToString("0.00##") cr</b></span>
+                    }
+                </div>
+            }
 
             <div class="controls">
-                <div class="credit-block"><span>Credit</span><strong>@_balance.ToString("0.00")</strong></div>
+                <div class="credit-block"><span>Fictional credit</span><strong>@_balance.ToString("0.00##")</strong></div>
                 <div class="credit-block win-block"><span>Win</span><strong>@_lastAward.ToString("0.00")</strong></div>
                 <div class="bet-control"><button @onclick="DecreaseBet" disabled="@_spinning" aria-label="Decrease bet">−</button><span><small>BET</small><strong>@_bet.ToString("0.00")</strong></span><button @onclick="IncreaseBet" disabled="@_spinning" aria-label="Increase bet">+</button></div>
-                <button class="spin-button" @onclick="Spin" disabled="@(_spinning || _balance < _bet)"><span>@(_spinning ? "WEAVING" : "SPIN")</span></button>
+                <button class="spin-button" aria-label="Spin" @onclick="Spin" disabled="@(_spinning || _balance < _bet)"><span>@(_spinning ? _isBonus ? "FREE SPINS" : "WEAVING" : "SPIN")</span><small>@(_spinning ? "Please wait" : "Space to spin")</small></button>
+            </div>
+            <div class="utility-bar">
+                <button @onclick="ToggleSound" aria-pressed="@_sound">Sound @(_sound ? "on" : "off")</button>
+                <button @onclick="() => _quick = !_quick" aria-pressed="@_quick">Quick @(_quick ? "on" : "off")</button>
+                <button @onclick="PreviewFeature" disabled="@_spinning">@(_previewComplete ? "Replay feature preview" : "Preview feature")</button>
+                <button @onclick="OpenRules">How to play</button>
             </div>
             @if (_balance < _bet)
             {
@@ -120,15 +142,24 @@
             <article><span>02</span><h2>TRIGGER</h2><p>Three Sparks award seven free spins at the state you earned.</p></article>
             <article><span>03</span><h2>ASCEND</h2><p>Two feature Sparks raise the multiplier and add a spin, up to 12.</p></article>
         </section>
+        @if (_showInspector && _history.Count > 0)
+        {
+            <details class="round-history"><summary>Last @_history.Count paid rounds</summary><div class="table-scroll"><table><thead><tr><th>Round</th><th>Bet</th><th>Base</th><th>Feature</th><th>Tension</th></tr></thead><tbody>
+                @foreach (var round in _history.Reverse())
+                {
+                    <tr><td>@round.Number</td><td>@round.Bet.ToString("0.00")</td><td>@round.Base.ToString("0.00##")</td><td>@round.Feature.ToString("0.00##")</td><td>@round.Before → @round.After</td></tr>
+                }
+            </tbody></table></div></details>
+        }
     </section>
 
     <footer class="project-foot"><span>Fictional credits only · no wagering</span><a href="https://walidelkersh.vercel.app/projects/aether-loom" target="_blank">Case study ↗</a></footer>
 
     @if (_showPays)
     {
-        <div class="modal-backdrop" @onclick="() => _showPays = false">
-            <section class="pays-modal" role="dialog" aria-modal="true" aria-labelledby="pays-title" @onclick:stopPropagation="true">
-                <header><div><small>GAME RULES</small><h2 id="pays-title">Pays &amp; feature</h2></div><button @onclick="() => _showPays = false" aria-label="Close pays and rules">×</button></header>
+        <div class="modal-backdrop" @onclick="CloseRules">
+            <section class="pays-modal" role="dialog" aria-modal="true" aria-labelledby="pays-title" tabindex="-1" @onclick:stopPropagation="true">
+                <header><div><small>GAME RULES</small><h2 id="pays-title">Pays &amp; feature</h2></div><button @onclick="CloseRules" aria-label="Close pays and rules">×</button></header>
                 <div class="pays-body">
                     <table><thead><tr><th>Symbol</th><th>3 reels</th><th>4 reels</th><th>5 reels</th></tr></thead><tbody>
                         @foreach (var symbol in _configuration.Paytable.PayingSymbols)
@@ -136,112 +167,9 @@
                             <tr><td><span class="pay-art art-@ArtClass(symbol)"></span>@SymbolName(symbol)</td><td>@_configuration.Paytable.Get(symbol, 3).ToString("0.##")×</td><td>@_configuration.Paytable.Get(symbol, 4).ToString("0.##")×</td><td>@_configuration.Paytable.Get(symbol, 5).ToString("0.##")×</td></tr>
                         }
                     </tbody></table>
-                    <div class="rules-copy"><h3>243 ways</h3><p>Wins start on reel 1 and continue across adjacent reels. Wild substitutes for every paying symbol. Only the longest match for each symbol pays.</p><h3>Tension</h3><p>Exactly two Sparks raise tension. Zero lowers it, one holds it, and an Overdrive paid spin vents to Rest.</p><h3>Weave Ascending</h3><p>Three or more Sparks award seven free spins. The feature inherits tension. Two Sparks advance the stage and add one spin, with a 12-spin maximum.</p></div>
+                    <div class="rules-copy"><h3>243 ways</h3><p>Wins start on reel 1 and continue across adjacent reels. Pays are per way, multiplied by the total bet. Different symbol wins add; only the longest match of each pays.</p><h3>Wild &amp; Spark</h3><p>Wild substitutes for regular symbols. Spark has no cash pay. Neither appears twice in one reel window; reel 1 has no Wild.</p><h3>Tension</h3><p>Exactly two Sparks raise tension. Zero lowers it, one holds it, and an Overdrive paid spin vents to Rest. The ladder multipliers apply only in the feature.</p><h3>Weave Ascending</h3><p>Three or more Sparks award seven free spins. The feature inherits tension. Two or more Sparks advance the stage and add one spin, with a 12-spin maximum. At Overdrive, extra spins keep the same multiplier.</p></div>
                 </div>
             </section>
         </div>
     }
 </main>
-
-@code {
-    private readonly GameConfiguration _configuration = GameConfiguration.LoadDefault();
-    private readonly TheoreticalMathReport _theory;
-    private GameEngine _engine;
-    private SymbolId[,] _grid;
-    private SpinResult? _currentSpin;
-    private BaseSpinResult? _currentBase;
-    private TensionState _state = TensionState.Rest;
-    private TensionState _displayStage = TensionState.Rest;
-    private double _balance = 1000;
-    private double _bet = 1;
-    private double _lastAward;
-    private bool _spinning;
-    private bool _isBonus;
-    private bool _showInspector;
-    private bool _showPays;
-    private string _message = "243 ways · wins pay left to right";
-    private string? _featureBanner;
-
-    public Game()
-    {
-        _theory = new ExactAnalyzer(_configuration).Analyze();
-        _engine = new GameEngine(_configuration, new Pcg32Random((ulong)DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()));
-        _grid = new[,]
-        {
-            { SymbolId.Crown, SymbolId.Linen, SymbolId.Moth, SymbolId.Shuttle, SymbolId.Knot },
-            { SymbolId.Dye, SymbolId.Spark, SymbolId.Wild, SymbolId.Linen, SymbolId.Crown },
-            { SymbolId.Knot, SymbolId.Shuttle, SymbolId.Dye, SymbolId.Moth, SymbolId.Linen }
-        };
-    }
-
-    private async Task Spin()
-    {
-        if (_spinning || _balance < _bet) return;
-        _spinning = true;
-        _isBonus = false;
-        _featureBanner = null;
-        _lastAward = 0;
-        _message = "The loom is resolving five physical stops…";
-        _balance -= _bet;
-        var cycle = _engine.Play(_bet, _state);
-        await Task.Delay(520);
-        _currentBase = cycle.BaseSpin;
-        ShowSpin(cycle.BaseSpin.Spin);
-        _state = cycle.BaseSpin.StateAfter;
-        _displayStage = cycle.BaseSpin.StateBefore;
-        _lastAward = cycle.BaseAward;
-        _message = cycle.BaseSpin.FeatureTriggered
-            ? $"{cycle.BaseSpin.Spin.ScatterCount} Sparks — Weave Ascending triggered"
-            : DescribeTransition(cycle.BaseSpin);
-
-        if (cycle.Bonus is not null)
-        {
-            _isBonus = true;
-            _featureBanner = $"WEAVE ASCENDING · STARTING {cycle.Bonus.StartingStage.ToString().ToUpperInvariant()}";
-            await Task.Delay(700);
-            var featureAward = 0.0;
-            for (var index = 0; index < cycle.Bonus.Spins.Count; index++)
-            {
-                var bonusSpin = cycle.Bonus.Spins[index];
-                _displayStage = bonusSpin.StageBefore;
-                _featureBanner = $"FREE SPIN {index + 1}/{cycle.Bonus.Spins.Count} · {bonusSpin.StageBefore.ToString().ToUpperInvariant()} · {bonusSpin.Spin.StageMultiplier:0.##}×";
-                _spinning = true;
-                await Task.Delay(260);
-                ShowSpin(bonusSpin.Spin);
-                featureAward += bonusSpin.Spin.Award;
-                _lastAward = cycle.BaseAward + featureAward;
-                _message = bonusSpin.ExtraSpinAwarded ? "Two Sparks — stage advanced and +1 spin" : BonusWinText(bonusSpin.Spin);
-                _spinning = false;
-                await Task.Delay(480);
-            }
-            _featureBanner = $"FEATURE COMPLETE · {cycle.FeatureAward:0.00} CREDITS";
-            _state = TensionState.Rest;
-            _displayStage = TensionState.Rest;
-        }
-
-        _balance += cycle.TotalAward;
-        _lastAward = cycle.TotalAward;
-        _spinning = false;
-    }
-
-    private void ShowSpin(SpinResult spin) { _currentSpin = spin; _grid = spin.Grid; }
-    private void IncreaseBet() => _bet = _configuration.Bets[Math.Min(_configuration.Bets.Count - 1, _configuration.Bets.ToList().IndexOf(_bet) + 1)];
-    private void DecreaseBet() => _bet = _configuration.Bets[Math.Max(0, _configuration.Bets.ToList().IndexOf(_bet) - 1)];
-    private void ResetCredits() { _balance = 1000; _lastAward = 0; _message = "Fictional credits reset"; }
-
-    private bool IsWinning(int row, int reel) => _currentSpin?.Wins.Any(win =>
-        reel < win.ReelsMatched && (_grid[row, reel] == win.Symbol || _grid[row, reel] == SymbolId.Wild)) == true;
-
-    private string CurrentReelSet => _currentSpin?.ReelSet ?? _configuration.BaseReelSet(_state).Name;
-    private string StopIndices => _currentSpin is null ? "—" : string.Join(" · ", _currentSpin.Stops.Select(stop => stop.ToString("00")));
-    private static string DescribeTransition(BaseSpinResult spin) => spin.StateBefore == spin.StateAfter
-        ? (spin.Spin.IsHit ? $"{spin.Spin.Wins.Sum(win => win.Ways)} winning ways" : "No win · tension holds")
-        : $"Tension {spin.StateBefore} → {spin.StateAfter}";
-    private static string BonusWinText(SpinResult spin) => spin.IsHit ? $"{spin.Wins.Sum(win => win.Ways)} ways at {spin.StageMultiplier:0.##}×" : "No win on this free spin";
-    private static string ArtClass(SymbolId symbol) => symbol.ToString().ToLowerInvariant();
-    private static string SymbolName(SymbolId symbol) => symbol switch
-    {
-        SymbolId.Crown => "CROWN", SymbolId.Moth => "MOTH", SymbolId.Shuttle => "SHUTTLE", SymbolId.Dye => "DYE",
-        SymbolId.Linen => "LINEN", SymbolId.Knot => "KNOT", SymbolId.Wild => "WILD", SymbolId.Spark => "SPARK", _ => ""
-    };
-}

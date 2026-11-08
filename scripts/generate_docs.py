@@ -113,7 +113,7 @@ Spark class, because the event that extends the feature (2+ Sparks) is correlate
 | Single-spin base award | Probability | 1 in |
 |---|---:|---:|
 """ + "\n".join(
-    f"| {b['label']}× | {prob(b['probability'])} | {('—' if b['probability'] == 0 else f'{1 / b['probability']:,.1f}')} |"
+    f"| {b['label']}× | {prob(b['probability'])} | {('never' if b['probability'] == 0 else f'{1 / b['probability']:,.1f}')} |"
     for b in STATS["baseWinDistribution"]
 ) + f"""
 
@@ -405,7 +405,7 @@ table.tight td, table.tight th {{ padding: 1pt 4pt; font-size: 7.5pt; }}
 .page {{ break-before: page; }}
 </style></head><body>
 <section class="cover">
-<div class="kicker">ORIGINAL 5×3 SLOT MATHEMATICS · PORTFOLIO PAR SHEET · MODEL v{CONFIG['version']}</div>
+<div class="kicker">PAR SHEET · MODEL v{CONFIG['version']}</div>
 <h1>Aether Loom</h1>
 <p>243 ways · physical 40-stop reel strips · persistent three-state Markov tension · finite 7–12 spin feature</p>
 <div class="metrics">
@@ -453,7 +453,7 @@ Configuration SHA-256 {CONFIG_HASH}. Every number is generated from reports/*.js
     ['Paid spins returning less than the bet', pct(small_wins, 2)],
     ['Max base / max paid cycle (reachable)', f"{EXTREMES['MaximumBaseAward']:,.2f}× / {EXTREMES['MaximumGameCycleAward']:,.2f}×"],
 ])}
-{table(['Base award (× bet)', 'Probability', '1 in'], [[b['label'], prob(b['probability']), '—' if b['probability'] == 0 else f"{1 / b['probability']:,.1f}"] for b in STATS['baseWinDistribution']])}
+{table(['Base award (× bet)', 'Probability', '1 in'], [[b['label'], prob(b['probability']), 'never' if b['probability'] == 0 else f"{1 / b['probability']:,.1f}"] for b in STATS['baseWinDistribution']])}
 <p class="note">Exact single-spin distribution from all 40⁵ stop combinations of each base reel set, weighted by π. Feature awards are not included in this table.</p>
 
 <h2>6. Player experience: RTP range after N spins</h2>

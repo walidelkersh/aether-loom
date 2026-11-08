@@ -70,7 +70,6 @@ switch (options.Mode)
 
         Save(new
         {
-            generatedAtUtc = DateTimeOffset.UtcNow,
             configuration.Version,
             configuration.GameName,
             sharedStripGroups = configuration.SharedStripGroups(),
@@ -160,7 +159,6 @@ Console.WriteLine($"Maximum observed:     {simulation.MaximumObservedWin:N2}x be
 
 Save(new
 {
-    generatedAtUtc = DateTimeOffset.UtcNow,
     configuration.Version,
     configuration.GameName,
     exact = new

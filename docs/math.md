@@ -54,7 +54,7 @@ Spark class, because the event that extends the feature (2+ Sparks) is correlate
 | [10, 20)× | 0.2331% | 428.9 |
 | [20, 50)× | 0.0098% | 10,191.4 |
 | [50, 100)× | 1.639e-08 | 61,008,686.8 |
-| 100+× | 0 (impossible) | — |
+| 100+× | 0 (impossible) | never |
 
 ## Base-state Markov chain
 

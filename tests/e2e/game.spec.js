@@ -11,7 +11,7 @@ test('rules, analysis view and one paid spin', async ({ page }) => {
   await page.getByRole('button', { name: /close pays and rules/i }).click();
 
   await page.getByRole('button', { name: 'Analysis' }).click();
-  await expect(page.getByText('96.566915%')).toBeVisible();
+  await expect(page.getByText('96.0000%')).toBeVisible();
   await expect(page.getByText('BASE_REST').first()).toBeVisible();
   await page.getByRole('button', { name: 'Cabinet' }).click();
 
@@ -79,7 +79,7 @@ test('mobile cabinet and analysis fit without horizontal scrolling', async ({ pa
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBeTruthy();
   await page.getByRole('button', { name: 'Analysis', exact: true }).click();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBeTruthy();
-  await expect(page.getByText('96.566915%')).toBeVisible();
+  await expect(page.getByText('96.0000%')).toBeVisible();
   await page.getByRole('button', { name: 'Pays & rules' }).click();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBeTruthy();
 });

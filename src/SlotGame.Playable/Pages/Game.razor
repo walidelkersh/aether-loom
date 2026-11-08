@@ -91,7 +91,7 @@
                         <p class="analysis-kicker">Exact long-run model, v@_configuration.Version</p>
                         <div class="rtp-row"><span>Base ways</span><i style="--value:@(_theory.BaseRtp * 100)%"></i><strong>@_theory.BaseRtp.ToString("P4")</strong></div>
                         <div class="rtp-row"><span>Feature</span><i style="--value:@(_theory.FeatureRtp * 100)%"></i><strong>@_theory.FeatureRtp.ToString("P4")</strong></div>
-                        <div class="rtp-total"><span>Total theoretical RTP</span><strong>@_theory.TotalRtp.ToString("P6")</strong></div>
+                        <div class="rtp-total"><span>Total theoretical RTP</span><strong>@_theory.TotalRtp.ToString("P4")</strong></div>
                         <div class="analysis-metrics">
                             <div><small>Feature entry</small><strong>1 in @((1 / _theory.FeatureTriggerProbability).ToString("0.00"))</strong></div>
                             <div><small>Base hit rate</small><strong>@_theory.BaseHitProbability.ToString("P4")</strong></div>

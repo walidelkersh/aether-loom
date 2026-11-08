@@ -1,16 +1,21 @@
 # Aether Loom mathematical model
 
-Model version 1.1.0 · configuration SHA-256 `59f14982727e`. Every figure on this page is **exact**
+Model version 1.2.0 · configuration SHA-256 `3856935804e7`. Every figure on this page is **exact**
 (computed from the reel strips, not sampled) unless it is marked *simulated*.
 
 ## RTP budget
 
 | Component | Exact contribution |
 |---|---:|
-| Base 243-ways wins | 80.431642% |
-| Weave Ascending feature | 16.135273% |
+| Base 243-ways wins | 79.8647% |
+| Weave Ascending feature | 16.1353% |
 | Scatter cash awards / jackpots | none |
-| **Total RTP** | **96.566915%** |
+| **Total RTP** | **96.0000%** |
+
+Target 96.00%. The exact value is 95.99999339%, 0.0000066 percentage points from target.
+It was reached by downgrading eight regular-symbol stops on BASE_REST and BASE_TAUT (for example Moth to Shuttle).
+No Wild or Spark moved, so the transition matrix, the stationary mix, trigger rates and the feature are unchanged;
+only base ways EV moved.
 
 A Python implementation written from the rules alone, in exact fractions
 (`scripts/independent_check.py`), reproduces it to 1e-12.
@@ -24,16 +29,16 @@ award when the feature starts at stage $s$.
 
 | Metric | Exact value |
 |---|---:|
-| Hit frequency (any award, incl. feature) | 65.0918% (1 in 1.536) |
-| Base hit frequency | 64.8210% |
-| Paid spins returning less than the bet | 39.31% of all paid spins |
+| Hit frequency (any award, incl. feature) | 64.0889% (1 in 1.560) |
+| Base hit frequency | 63.8152% |
+| Paid spins returning less than the bet | 38.58% of all paid spins |
 | Feature frequency | 0.4206% (1 in 237.74) |
 | Average feature award | 38.3603× bet over 8.3705 spins |
-| Variance per paid spin | 14.912377 bet² |
-| Standard deviation | 3.861655× bet |
-| Volatility index (90%, 1.645σ) | 6.3519 |
-| Volatility index (95%, 1.960σ) | 7.5687 |
-| Long-run variance with state correlation, σ²∞ | 14.831976 bet² (-0.539% vs. i.i.d.) |
+| Variance per paid spin | 14.931998 bet² |
+| Standard deviation | 3.864194× bet |
+| Volatility index (90%, 1.645σ) | 6.3560 |
+| Volatility index (95%, 1.960σ) | 7.5737 |
+| Long-run variance with state correlation, σ²∞ | 14.851265 bet² (-0.541% vs. i.i.d.) |
 | Maximum base award (reachable) | 88.00× |
 | Maximum paid-cycle award (reachable) | 11,227.60× |
 
@@ -46,13 +51,13 @@ Spark class, because the event that extends the feature (2+ Sparks) is correlate
 
 | Single-spin base award | Probability | 1 in |
 |---|---:|---:|
-| 0× | 35.1790% | 2.8 |
-| (0, 1)× | 39.3069% | 2.5 |
-| [1, 2)× | 13.7799% | 7.3 |
-| [2, 5)× | 9.5891% | 10.4 |
-| [5, 10)× | 1.9021% | 52.6 |
-| [10, 20)× | 0.2331% | 428.9 |
-| [20, 50)× | 0.0098% | 10,191.4 |
+| 0× | 36.1848% | 2.8 |
+| (0, 1)× | 38.5812% | 2.6 |
+| [1, 2)× | 13.3746% | 7.5 |
+| [2, 5)× | 9.7117% | 10.3 |
+| [5, 10)× | 1.9047% | 52.5 |
+| [10, 20)× | 0.2333% | 428.7 |
+| [20, 50)× | 0.0097% | 10,335.5 |
 | [50, 100)× | 1.639e-08 | 61,008,686.8 |
 | 100+× | 0 (impossible) | never |
 
@@ -62,9 +67,9 @@ Rows are the current state; columns are the next state.
 
 | Current state | Rest | Taut | Overdrive | Stationary π | Conditional RTP | Value vs. Rest |
 |---|---:|---:|---:|---:|---:|---:|
-| Rest | 95.5481% | 4.4519% | 0.0000% | 93.2116% | 91.294% | +0.0000 bets |
-| Taut | 58.0910% | 34.0913% | 7.8177% | 6.2962% | 153.090% | +1.1844 bets |
-| Overdrive | 100.0000% | 0.0000% | 0.0000% | 0.4922% | 372.091% | +2.7552 bets |
+| Rest | 95.5481% | 4.4519% | 0.0000% | 93.2116% | 90.688% | +0.0000 bets |
+| Taut | 58.0910% | 34.0913% | 7.8177% | 6.2962% | 153.061% | +1.1932 bets |
+| Overdrive | 100.0000% | 0.0000% | 0.0000% | 0.4922% | 372.091% | +2.7609 bets |
 
 *Value vs. Rest* is $v = Z(m-\mu\mathbf{1})$ with fundamental matrix $Z=(I-P+\mathbf{1}\pi)^{-1}$: the extra
 long-run return, in bets, of a session currently in that state compared with one in Rest. It quantifies what a
@@ -88,19 +93,19 @@ Uses the correlation-corrected σ∞, constant bet. A session of N spins lands i
 
 | Paid spins | 90% band | 95% band |
 |---:|---:|---:|
-| 1,000 | 76.53% – 116.60% | 72.70% – 120.44% |
-| 10,000 | 90.23% – 102.90% | 89.02% – 104.12% |
-| 100,000 | 94.56% – 98.57% | 94.18% – 98.95% |
-| 1,000,000 | 95.93% – 97.20% | 95.81% – 97.32% |
-| 10,000,000 | 96.37% – 96.77% | 96.33% – 96.81% |
+| 1,000 | 75.95% – 116.05% | 72.11% – 119.89% |
+| 10,000 | 89.66% – 102.34% | 88.45% – 103.55% |
+| 100,000 | 94.00% – 98.00% | 93.61% – 98.39% |
+| 1,000,000 | 95.37% – 96.63% | 95.24% – 96.76% |
+| 10,000,000 | 95.80% – 96.20% | 95.76% – 96.24% |
 
 Every session starts in Rest, below the long-run state mix, so short sessions return slightly less than the
-stationary RTP: 10 spins → 95.6856%, 100 spins → 96.4788%, 1,000 spins → 96.5581%, 10,000 spins → 96.5660%.
+stationary RTP: 10 spins → 95.1128%, 100 spins → 95.9113%, 1,000 spins → 95.9911%, 10,000 spins → 95.9991%.
 
 ## Simulation summary (*simulated*)
 
-10,000,000 paid spins, PCG32 seed `20260908`: observed RTP 96.638977%, hit frequency
-65.1093%, SD 3.8754×, largest observed award 731.79×.
+10,000,000 paid spins, PCG32 seed `20260908`: observed RTP 96.057740%, hit frequency
+64.1010%, SD 3.8780×, largest observed award 731.79×.
 The full comparison is under Verification below.
 
 ## Verification
@@ -112,8 +117,8 @@ check on the *engine* (does the code that plays the game behave like the math?),
 
 | Method | Arithmetic | Shares code with engine? | Total RTP |
 |---|---|---|---|
-| `ExactAnalyzer`: window count distributions, convolution, linear solve, reward recursion | IEEE double | yes (C# core) | 96.566914833464% |
-| `ParAnalyzer`: brute-force enumeration of all 40⁵ stop combinations per reel set | 128-bit integers | partially | 96.566914833464% |
+| `ExactAnalyzer`: window count distributions, convolution, linear solve, reward recursion | IEEE double | yes (C# core) | 95.999993390653% |
+| `ParAnalyzer`: brute-force enumeration of all 40⁵ stop combinations per reel set | 128-bit integers | partially | 95.999993390654% |
 | `scripts/independent_check.py`: written from the rules in game-design.md | Python `Fraction` | **no** | agrees to 1e-12 |
 
 The window-distribution ways EV equals the enumerated ways EV for every reel set
@@ -131,13 +136,13 @@ settlement (0.07 × 3 × 0.20 × 1.75 = 0.0735), and the two-state balance equat
 
 | Quantity | Exact | Simulated | Simulated − exact |
 |---|---:|---:|---:|
-| Base ways RTP | 80.431642% | 80.499687% | +0.0680 pp |
+| Base ways RTP | 79.864720% | 79.918450% | +0.0537 pp |
 | Feature RTP | 16.135273% | 16.139290% | +0.0040 pp |
-| Total RTP | 96.566915% | 96.638977% | +0.0721 pp |
-| Hit frequency (any award) | 65.091762% | 65.109340% | +0.0176 pp |
-| Base hit frequency | 64.820986% | 64.838740% | +0.0178 pp |
+| Total RTP | 95.999993% | 96.057740% | +0.0577 pp |
+| Hit frequency (any award) | 64.088865% | 64.100960% | +0.0121 pp |
+| Base hit frequency | 63.815205% | 63.827490% | +0.0123 pp |
 | Feature frequency | 0.420624% | 0.420600% | -0.0000 pp |
-| Standard deviation | 3.861655× | 3.875392× | +0.013737× |
+| Standard deviation | 3.864194× | 3.878037× | +0.013842× |
 | Conditional feature award | 38.360288× | 38.372063× | +0.011775× |
 | Feature spins per trigger | 8.370532 | 8.370447 | -0.000085 |
 
@@ -148,19 +153,19 @@ Paid spins are **not independent**: the tension state links consecutive spins. T
 
 | Method | 95% half-width | Valid under correlation? |
 |---|---:|---|
-| Textbook i.i.d. | ±0.2402% | no |
-| Batch means (100 contiguous batches) | ±0.2582% | yes, asymptotically |
-| Exact σ∞ from the Markov model | ±0.2387% | yes |
+| Textbook i.i.d. | ±0.2404% | no |
+| Batch means (100 contiguous batches) | ±0.2617% | yes, asymptotically |
+| Exact σ∞ from the Markov model | ±0.2389% | yes |
 
-σ∞² = Var(X) + 2Σ Cov(X₀, Xₖ) = 14.831976, versus Var(X) = 14.912377. Here the
-correlation slightly *reduces* long-run variance (-0.539%): zero-Spark spins pay the most
-in the base game and push tension down, while bonuses reset to Rest. The simulated RTP is **+0.59** correlation-corrected
+σ∞² = Var(X) + 2Σ Cov(X₀, Xₖ) = 14.851265, versus Var(X) = 14.931998. Here the
+correlation slightly *reduces* long-run variance (-0.541%): zero-Spark spins pay the most
+in the base game and push tension down, while bonuses reset to Rest. The simulated RTP is **+0.47** correlation-corrected
 standard errors from the exact value.
 
 ### Win-distribution test
 
 Pearson chi-square of the simulated base-award distribution against the exact enumerated distribution:
-χ² = 5.64 on 6 degrees of freedom, **p = 0.464**
+χ² = 5.37 on 6 degrees of freedom, **p = 0.497**
 (buckets with expected count below 5 pooled). RTP agreement alone cannot catch a bug that moves probability between
 small and large wins while keeping the mean; a distribution test can.
 

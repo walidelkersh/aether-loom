@@ -6,8 +6,8 @@ The headline RTP assumes a **constant bet**. The three tension states have very 
 
 | State | Share of paid spins | Return of a spin in this state |
 |---|---:|---:|
-| Rest | 93.21% | 91.29% |
-| Taut | 6.30% | 153.09% |
+| Rest | 93.21% | 90.69% |
+| Taut | 6.30% | 153.06% |
 | Overdrive | 0.49% | 372.09% |
 
 Version 1.0 kept a single tension state for the whole session and allowed the bet to change between spins.
@@ -18,11 +18,11 @@ $$R=\frac{\sum_s \pi_s\, b_s\, r_s}{\sum_s \pi_s\, b_s}$$
 
 | Strategy | Exact return per credit wagered |
 |---|---:|
-| Constant bet (any level) | 96.5669% |
-| 0.20 in Rest, 10.00 in Taut and Overdrive | **152.2342%** |
-| 0.20 in Rest and Taut, 10.00 only in Overdrive | 150.1062% |
+| Constant bet (any level) | 96.0000% |
+| 0.20 in Rest, 10.00 in Taut and Overdrive | **152.0823%** |
+| 0.20 in Rest and Taut, 10.00 only in Overdrive | 149.6495% |
 
-A second, related exposure: a machine left in Taut is worth **+1.18 bets** of future return
+A second, related exposure: a machine left in Taut is worth **+1.19 bets** of future return
 to the next player compared with Rest, and Overdrive **+2.76 bets** (relative state values from the
 fundamental matrix). In a cabinet that keeps state across players this invites "machine hunting".
 
@@ -46,8 +46,8 @@ maximum-bet state is Rest, otherwise bet the maximum.
 
 | State policy | Simulated return per credit wagered |
 |---|---:|
-| Shared across bets (v1.0) | 153.47% (theory 152.23%) |
-| Per bet level (v1.1) | 96.74% (constant-bet RTP 96.57%) |
+| Shared across bets (v1.0) | 153.30% (theory 152.08%) |
+| Per bet level (v1.1) | 96.18% (constant-bet RTP 96.00%) |
 
 `BetSwitchingIsProfitableOnlyWithSharedState` keeps this as a regression test. The other designs considered were
 locking the bet while tension is above Rest (simpler, but players dislike a locked bet button) and narrowing the gap

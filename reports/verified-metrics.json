@@ -1,20 +1,20 @@
 {
-  "Version": "1.1.0",
+  "Version": "1.2.0",
   "GameName": "Aether Loom",
   "exact": {
-    "BaseRtp": 0.8043164153159983,
+    "BaseRtp": 0.7986472008878933,
     "FeatureRtp": 0.16135273301863862,
-    "TotalRtp": 0.9656691483346369,
+    "TotalRtp": 0.9599999339065319,
     "FeatureTriggerProbability": 0.00420624404335547,
-    "BaseHitProbability": 0.6482098585069459,
+    "BaseHitProbability": 0.6381520544303791,
     "stationaryStateProbabilities": [
       0.9321163470123749,
       0.06296151368369796,
       0.004922139303927144
     ],
     "conditionalStateRtp": [
-      0.9129400405052278,
-      1.5309032293564364,
+      0.9068777494896029,
+      1.5306101317001863,
       3.720908122088126
     ],
     "transitionMatrix": [
@@ -37,13 +37,13 @@
     "reelSets": {
       "BASE_REST": {
         "ReelSet": "BASE_REST",
-        "ExpectedWaysAward": 0.7910498627929692,
-        "BaseHitProbability": 0.647859375,
+        "ExpectedWaysAward": 0.7849875717773442,
+        "BaseHitProbability": 0.637203125,
         "SymbolContributions": {
-          "Crown": 0.0419080078125,
-          "Moth": 0.061236000000000054,
-          "Shuttle": 0.07249368164062507,
-          "Dye": 0.09015300000000002,
+          "Crown": 0.03891796875000001,
+          "Moth": 0.03253162500000003,
+          "Shuttle": 0.07810867968750007,
+          "Dye": 0.1101701250000001,
           "Linen": 0.12285738281250003,
           "Knot": 0.40240179052734404
         },
@@ -70,14 +70,14 @@
       },
       "BASE_TAUT": {
         "ReelSet": "BASE_TAUT",
-        "ExpectedWaysAward": 0.9724699160156256,
-        "BaseHitProbability": 0.649046875,
+        "ExpectedWaysAward": 0.9721768183593755,
+        "BaseHitProbability": 0.6470625,
         "SymbolContributions": {
           "Crown": 0.07303668750000006,
           "Moth": 0.0998451562500001,
-          "Shuttle": 0.11549250000000011,
-          "Dye": 0.13001544140625004,
-          "Linen": 0.14475585937500016,
+          "Shuttle": 0.08661937500000008,
+          "Dye": 0.13754179687500007,
+          "Linen": 0.16580953125000011,
           "Knot": 0.40932427148437517
         },
         "ScatterProbabilities": [
@@ -251,45 +251,45 @@
         "ExpectedSpins": 8.370532008162368
       }
     ],
-    "Variance": 14.912377349902268,
-    "StandardDeviation": 3.861654742452032,
-    "AsymptoticVariance": 14.831975678689085,
-    "HitFrequency": 0.650917616743921,
+    "Variance": 14.931997881352972,
+    "StandardDeviation": 3.864194337938113,
+    "AsymptoticVariance": 14.851265368060545,
+    "HitFrequency": 0.640888645229056,
     "baseWinDistribution": [
-      0.3517901414930539,
-      0.3930691980561526,
-      0.1377989311555313,
-      0.0958914606151214,
-      0.019020718188281452,
-      0.0023314121671845407,
-      9.812193356638909E-05,
+      0.3618479455696206,
+      0.3858117485163838,
+      0.13374627453362117,
+      0.09711740163542197,
+      0.019047191904771884,
+      0.0023326676953942067,
+      9.67537536779185E-05,
       1.639110842421841E-08,
       0
     ],
-    "rtpHalfWidth95FromAsymptoticVariance": 0.002386973495832462
+    "rtpHalfWidth95FromAsymptoticVariance": 0.0023885251777324827
   },
   "simulation": {
     "PaidSpins": 10000000,
     "Seed": 20260908,
     "TotalWager": 10000000,
-    "TotalPayout": 9663897.715,
-    "ObservedRtp": 0.9663897714999999,
-    "BaseRtp": 0.804996874,
+    "TotalPayout": 9605774.015,
+    "ObservedRtp": 0.9605774015,
+    "BaseRtp": 0.799184504,
     "FeatureRtp": 0.16139289750000002,
-    "HitFrequency": 0.6510934,
-    "BaseHitFrequency": 0.6483874,
+    "HitFrequency": 0.6410096,
+    "BaseHitFrequency": 0.6382749,
     "FeatureTriggers": 42060,
     "FeatureFrequency": 0.004206,
     "FreeSpinsPlayed": 352061,
     "FreeSpinFrequency": 0.0352061,
     "FreeSpinsPerTrigger": 8.370446980504042,
-    "AverageWin": 1.4842567464207133,
-    "Variance": 15.018659383842408,
-    "StandardDeviation": 3.87539151362058,
-    "VolatilityIndex90": 6.374453232744865,
+    "AverageWin": 1.498538245761062,
+    "Variance": 15.039167632607269,
+    "StandardDeviation": 3.878036569271526,
+    "VolatilityIndex90": 6.3788039631125475,
     "MaximumObservedWin": 731.7875,
-    "RtpConfidenceHalfWidth95Iid": 0.002401948547420984,
-    "RtpConfidenceHalfWidth95BatchMeans": 0.002582392243631511,
+    "RtpConfidenceHalfWidth95Iid": 0.002403587939868511,
+    "RtpConfidenceHalfWidth95BatchMeans": 0.0026168810744263173,
     "Batches": 100,
     "StateVisits": [
       9322129,
@@ -302,21 +302,21 @@
       1344
     ],
     "BaseWinBuckets": [
-      3516126,
-      3932445,
-      1377446,
-      958877,
-      190538,
-      23565,
+      3617251,
+      3859952,
+      1336878,
+      970672,
+      190701,
+      23543,
       1003,
       0,
       0
     ]
   },
   "distributionTest": {
-    "Statistic": 5.644696156736369,
+    "Statistic": 5.373702468803464,
     "DegreesOfFreedom": 6,
-    "PValue": 0.46414353395253594,
+    "PValue": 0.4968509372328471,
     "PooledBuckets": [
       0,
       1,

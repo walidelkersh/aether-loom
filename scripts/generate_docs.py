@@ -73,10 +73,15 @@ Model version {CONFIG['version']} · configuration SHA-256 `{CONFIG_HASH}`. Ever
 
 | Component | Exact contribution |
 |---|---:|
-| Base 243-ways wins | {pct(EXACT['BaseRtp'])} |
-| Weave Ascending feature | {pct(EXACT['FeatureRtp'])} |
+| Base 243-ways wins | {pct(EXACT['BaseRtp'], 4)} |
+| Weave Ascending feature | {pct(EXACT['FeatureRtp'], 4)} |
 | Scatter cash awards / jackpots | none |
-| **Total RTP** | **{pct(EXACT['TotalRtp'])}** |
+| **Total RTP** | **{pct(EXACT['TotalRtp'], 4)}** |
+
+Target 96.00%. The exact value is {pct(EXACT['TotalRtp'], 8)}, {abs(EXACT['TotalRtp'] - 0.96) * 100:.7f} percentage points from target.
+It was reached by downgrading eight regular-symbol stops on BASE_REST and BASE_TAUT (for example Moth to Shuttle).
+No Wild or Spark moved, so the transition matrix, the stationary mix, trigger rates and the feature are unchanged;
+only base ways EV moved.
 
 A Python implementation written from the rules alone, in exact fractions
 (`scripts/independent_check.py`), reproduces it to 1e-12.
@@ -433,7 +438,7 @@ Configuration SHA-256 {CONFIG_HASH}. Every number is generated from reports/*.js
 {table(['Symbol', '3 reels', '4 reels', '5 reels'], pay_rows)}
 
 <h2>2. RTP budget</h2>
-{table(['Component', 'Exact'], [['Base 243-ways wins', pct(EXACT['BaseRtp'])], ['Feature', pct(EXACT['FeatureRtp'])], ['<b>Total</b>', f"<b>{pct(EXACT['TotalRtp'])}</b>"]])}
+{table(['Component', 'Exact'], [['Base 243-ways wins', pct(EXACT['BaseRtp'], 4)], ['Feature', pct(EXACT['FeatureRtp'], 4)], ['<b>Total</b>', f"<b>{pct(EXACT['TotalRtp'], 4)}</b>"], ['Exact value (target 96.00%)', pct(EXACT['TotalRtp'], 8)]])}
 <div class="formula">RTP = Σ<sub>s</sub> π<sub>s</sub> (B<sub>s</sub> + t<sub>s</sub> F<sub>s</sub>), &nbsp; πP = π, &nbsp; Σπ<sub>s</sub> = 1</div>
 
 <h2>3. Base-state Markov chain</h2>

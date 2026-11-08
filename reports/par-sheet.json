@@ -1,5 +1,5 @@
 {
-  "Version": "1.1.0",
+  "Version": "1.2.0",
   "GameName": "Aether Loom",
   "sharedStripGroups": [
     [
@@ -8,19 +8,19 @@
     ]
   ],
   "exact": {
-    "BaseRtp": 0.8043164153159983,
+    "BaseRtp": 0.7986472008878933,
     "FeatureRtp": 0.16135273301863862,
-    "TotalRtp": 0.9656691483346369,
+    "TotalRtp": 0.9599999339065319,
     "FeatureTriggerProbability": 0.00420624404335547,
-    "BaseHitProbability": 0.6482098585069459,
+    "BaseHitProbability": 0.6381520544303791,
     "stationaryStateProbabilities": [
       0.9321163470123749,
       0.06296151368369796,
       0.004922139303927144
     ],
     "conditionalStateRtp": [
-      0.9129400405052278,
-      1.5309032293564364,
+      0.9068777494896029,
+      1.5306101317001863,
       3.720908122088126
     ],
     "transitionMatrix": [
@@ -43,13 +43,13 @@
     "reelSets": {
       "BASE_REST": {
         "ReelSet": "BASE_REST",
-        "ExpectedWaysAward": 0.7910498627929692,
-        "BaseHitProbability": 0.647859375,
+        "ExpectedWaysAward": 0.7849875717773442,
+        "BaseHitProbability": 0.637203125,
         "SymbolContributions": {
-          "Crown": 0.0419080078125,
-          "Moth": 0.061236000000000054,
-          "Shuttle": 0.07249368164062507,
-          "Dye": 0.09015300000000002,
+          "Crown": 0.03891796875000001,
+          "Moth": 0.03253162500000003,
+          "Shuttle": 0.07810867968750007,
+          "Dye": 0.1101701250000001,
           "Linen": 0.12285738281250003,
           "Knot": 0.40240179052734404
         },
@@ -76,14 +76,14 @@
       },
       "BASE_TAUT": {
         "ReelSet": "BASE_TAUT",
-        "ExpectedWaysAward": 0.9724699160156256,
-        "BaseHitProbability": 0.649046875,
+        "ExpectedWaysAward": 0.9721768183593755,
+        "BaseHitProbability": 0.6470625,
         "SymbolContributions": {
           "Crown": 0.07303668750000006,
           "Moth": 0.0998451562500001,
-          "Shuttle": 0.11549250000000011,
-          "Dye": 0.13001544140625004,
-          "Linen": 0.14475585937500016,
+          "Shuttle": 0.08661937500000008,
+          "Dye": 0.13754179687500007,
+          "Linen": 0.16580953125000011,
           "Knot": 0.40932427148437517
         },
         "ScatterProbabilities": [
@@ -259,33 +259,33 @@
     ]
   },
   "statistics": {
-    "Rtp": 0.9656691483346425,
-    "Variance": 14.912377349902268,
-    "StandardDeviation": 3.861654742452032,
-    "VolatilityIndex90": 6.351858249741195,
-    "VolatilityIndex95": 7.5687042756352545,
-    "AsymptoticVariance": 14.831975678689085,
-    "CorrelationFactor": 0.9946083934622463,
-    "HitFrequency": 0.650917616743921,
-    "BaseHitFrequency": 0.6482098585069459,
+    "Rtp": 0.9599999339065374,
+    "Variance": 14.931997881352972,
+    "StandardDeviation": 3.864194337938113,
+    "VolatilityIndex90": 6.356035513534857,
+    "VolatilityIndex95": 7.573681791362536,
+    "AsymptoticVariance": 14.851265368060545,
+    "CorrelationFactor": 0.9945933214072281,
+    "HitFrequency": 0.640888645229056,
+    "BaseHitFrequency": 0.6381520544303793,
     "states": [
       {
         "State": "Rest",
-        "ExpectedReturn": 0.912940040505227,
-        "SecondMoment": 11.404922563868023,
-        "HitProbability": 0.6503212827300209,
-        "BaseHitProbability": 0.647859375,
+        "ExpectedReturn": 0.906877749489602,
+        "SecondMoment": 11.41254095181519,
+        "HitProbability": 0.6397002751024492,
+        "BaseHitProbability": 0.637203125,
         "FeatureProbability": 0.00375837890625,
         "RelativeValue": 0
       },
       {
         "State": "Taut",
-        "ExpectedReturn": 1.5309032293564346,
-        "SecondMoment": 57.80197799190123,
-        "HitProbability": 0.6547782991538699,
-        "BaseHitProbability": 0.649046875,
+        "ExpectedReturn": 1.5306101317001843,
+        "SecondMoment": 57.82742649954862,
+        "HitProbability": 0.6527301164479998,
+        "BaseHitProbability": 0.6470625,
         "FeatureProbability": 0.009085078125,
-        "RelativeValue": 1.1844117254724695
+        "RelativeValue": 1.1932410900953947
       },
       {
         "State": "Overdrive",
@@ -294,7 +294,7 @@
         "HitProbability": 0.7144628061301039,
         "BaseHitProbability": 0.703875,
         "FeatureProbability": 0.026611875,
-        "RelativeValue": 2.755238973753478
+        "RelativeValue": 2.760908188181583
       }
     ],
     "features": [
@@ -323,31 +323,31 @@
     "baseWinDistribution": [
       {
         "label": "0",
-        "probability": 0.3517901414930539
+        "probability": 0.3618479455696206
       },
       {
         "label": "(0, 1)",
-        "probability": 0.3930691980561526
+        "probability": 0.3858117485163838
       },
       {
         "label": "[1, 2)",
-        "probability": 0.1377989311555313
+        "probability": 0.13374627453362117
       },
       {
         "label": "[2, 5)",
-        "probability": 0.0958914606151214
+        "probability": 0.09711740163542197
       },
       {
         "label": "[5, 10)",
-        "probability": 0.019020718188281452
+        "probability": 0.019047191904771884
       },
       {
         "label": "[10, 20)",
-        "probability": 0.0023314121671845407
+        "probability": 0.0023326676953942067
       },
       {
         "label": "[20, 50)",
-        "probability": 9.812193356638909E-05
+        "probability": 9.67537536779185E-05
       },
       {
         "label": "[50, 100)",
@@ -361,56 +361,56 @@
     "confidenceBands": [
       {
         "Spins": 1000,
-        "LowerRtp90": 0.7653479739399083,
-        "UpperRtp90": 1.1659903227293766,
-        "LowerRtp95": 0.7269717987513963,
-        "UpperRtp95": 1.2043664979178887
+        "LowerRtp90": 0.7595485382332502,
+        "UpperRtp90": 1.1604513295798244,
+        "LowerRtp95": 0.7211474161332891,
+        "UpperRtp95": 1.1988524516797856
       },
       {
         "Spins": 10000,
-        "LowerRtp90": 0.9023220308699262,
-        "UpperRtp90": 1.0290162657993587,
-        "LowerRtp95": 0.8901864187217923,
-        "UpperRtp95": 1.0411518779474926
+        "LowerRtp90": 0.8966116368578165,
+        "UpperRtp90": 1.0233882309552582,
+        "LowerRtp95": 0.884468135803606,
+        "UpperRtp95": 1.0355317320094688
       },
       {
         "Spins": 100000,
-        "LowerRtp90": 0.945637030895169,
-        "UpperRtp90": 0.9857012657741159,
-        "LowerRtp95": 0.9417994133763179,
-        "UpperRtp95": 0.989538883292967
+        "LowerRtp90": 0.9399547943392087,
+        "UpperRtp90": 0.980045073473866,
+        "LowerRtp95": 0.9361146821292126,
+        "UpperRtp95": 0.9838851856838622
       },
       {
         "Spins": 1000000,
-        "LowerRtp90": 0.9593344365881709,
-        "UpperRtp90": 0.9720038600811141,
-        "LowerRtp95": 0.9581208753733574,
-        "UpperRtp95": 0.9732174212959275
+        "LowerRtp90": 0.9536611042016653,
+        "UpperRtp90": 0.9663387636114095,
+        "LowerRtp95": 0.9524467540962442,
+        "UpperRtp95": 0.9675531137168305
       },
       {
         "Spins": 10000000,
-        "LowerRtp90": 0.9636659365906951,
-        "UpperRtp90": 0.9676723600785898,
-        "LowerRtp95": 0.96328217483881,
-        "UpperRtp95": 0.968056121830475
+        "LowerRtp90": 0.9579954199498045,
+        "UpperRtp90": 0.9620044478632702,
+        "LowerRtp95": 0.9576114087288049,
+        "UpperRtp95": 0.9623884590842698
       }
     ],
     "sessionRtpFromRest": [
       {
         "spins": 10,
-        "expectedRtp": 0.9568557891369125
+        "expectedRtp": 0.9511281934579946
       },
       {
         "spins": 100,
-        "expectedRtp": 0.9647878080835922
+        "expectedRtp": 0.9591127555072393
       },
       {
         "spins": 1000,
-        "expectedRtp": 0.9655810143095481
+        "expectedRtp": 0.9599112160665872
       },
       {
         "spins": 10000,
-        "expectedRtp": 0.9656603349318824
+        "expectedRtp": 0.9599910621223388
       }
     ]
   },
@@ -418,9 +418,9 @@
     {
       "ReelSet": "BASE_REST",
       "combinations": 102400000,
-      "expectedAward": 0.7910498627929687,
-      "expectedAwardSquared": 2.523470854956055,
-      "hitProbability": 0.647859375,
+      "expectedAward": 0.7849875717773438,
+      "expectedAwardSquared": 2.5327706177880858,
+      "hitProbability": 0.637203125,
       "maximumAward": 49.6,
       "sparkClassProbabilities": [
         0.677187080078125,
@@ -429,13 +429,13 @@
         0.00375837890625
       ],
       "winBuckets": [
-        36059200,
-        40482796,
-        14140701,
-        9640732,
-        1852670,
-        215484,
-        8417,
+        37150400,
+        39689482,
+        13699107,
+        9781009,
+        1856765,
+        215039,
+        8198,
         0,
         0
       ]
@@ -443,9 +443,9 @@
     {
       "ReelSet": "BASE_TAUT",
       "combinations": 102400000,
-      "expectedAward": 0.9724699160156252,
-      "expectedAwardSquared": 3.955142241455078,
-      "hitProbability": 0.649046875,
+      "expectedAward": 0.972176818359375,
+      "expectedAwardSquared": 3.976455766728516,
+      "hitProbability": 0.6470625,
       "maximumAward": 42.4,
       "sparkClassProbabilities": [
         0.5718248828125,
@@ -454,13 +454,13 @@
         0.009085078125
       ],
       "winBuckets": [
-        35937600,
-        36947707,
-        13611671,
-        12150468,
-        3199121,
-        527569,
-        25864,
+        36140800,
+        36888911,
+        13558066,
+        12067590,
+        3181553,
+        536199,
+        26881,
         0,
         0
       ]
@@ -544,8 +544,8 @@
   "advantagePlay": {
     "minBet": 0.2,
     "maxBet": 10,
-    "sharedStateBetSwitchReturn": 1.5223420706626867,
-    "maxBetOnlyInOverdrive": 1.5010622810205538
+    "sharedStateBetSwitchReturn": 1.5208226532192268,
+    "maxBetOnlyInOverdrive": 1.4964946982481586
   },
   "extremes": {
     "ReachableBaseStates": [

@@ -12,15 +12,16 @@ set and becomes the starting stage of a 7 to 12 spin feature.
 
 | | |
 |---|---:|
-| RTP | 96.5669% (base 80.4316%, feature 16.1353%) |
-| Hit frequency | 65.09% |
+| RTP | 96.0000% (base 79.8647%, feature 16.1353%) |
+| Hit frequency | 64.09% |
 | Feature frequency | 1 in 237.74 |
-| Standard deviation | 3.862x bet |
-| Volatility index (90%) | 6.35 |
+| Standard deviation | 3.864x bet |
+| Volatility index (90%) | 6.36 |
 | Max paid cycle | 11,227.60x |
-| Simulated RTP, 10M spins | 96.6390% |
+| Simulated RTP, 10M spins | 96.0577% |
 
-Everything except the last row is computed exactly from the strips, not sampled.
+Everything except the last row is computed exactly from the strips, not sampled. The RTP was tuned to a 96.00%
+target by downgrading eight regular-symbol stops in the two lower base states; the exact value is 95.99999339%.
 
 ## How the math works
 
@@ -38,7 +39,7 @@ shared code. CI fails if it disagrees with the C# result.
 
 ## What was hard
 
-- **Bet switching.** The states return 91.3%, 153.1% and 372.1% per spin. With one state shared across bets, a
+- **Bet switching.** The states return 90.7%, 153.1% and 372.1% per spin. With one state shared across bets, a
   player who bets 0.20 in Rest and 10 otherwise gets 152% back. State is now kept per bet level and cleared on
   cash-out. [advantage-play.md](docs/advantage-play.md) has the numbers and a simulation of both versions.
 - **Max win.** The first max-win analyzer treated "no outcome with 3+ Sparks" as a zero award instead of

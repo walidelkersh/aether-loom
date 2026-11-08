@@ -28,7 +28,7 @@ test('feature preview remains locked and preserves paid credits', async ({ page 
   await page.goto(process.env.GAME_URL || 'http://127.0.0.1:5098/');
   const preview = page.getByRole('button', { name: 'Preview feature', exact: true });
   await expect(preview).toBeVisible({ timeout: 20000 });
-  await page.getByRole('button', { name: 'Quick off', exact: true }).click();
+  await page.getByRole('button', { name: 'Quick spin', exact: true }).click();
   const initialCredit = await page.locator('.credit-block strong').first().textContent();
   await preview.click();
   await expect(page.locator('.preview-label')).toContainText('NO WAGER');

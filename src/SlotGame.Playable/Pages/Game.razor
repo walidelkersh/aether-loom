@@ -30,8 +30,8 @@
             <div class="machine-toolbar">
                 <div class="reel-status"><strong>@(_showInspector ? CurrentReelSet : _isBonus ? "Weave Ascending" : "243 ways")</strong><small>@(_showInspector ? "C# model v" + _configuration.Version : "Left to right")</small></div>
                 <div class="mode-switch" role="group" aria-label="Display mode">
-                    <button class="@(!_showInspector ? "active" : "")" @onclick="() => _showInspector = false" aria-pressed="@(!_showInspector)">Cabinet</button>
-                    <button class="@(_showInspector ? "active" : "")" @onclick="() => _showInspector = true" aria-pressed="@_showInspector">Analysis</button>
+                    <button class="@(!_showInspector ? "active" : "")" @onclick="() => _showInspector = false" aria-pressed="@(!_showInspector ? "true" : "false")">Cabinet</button>
+                    <button class="@(_showInspector ? "active" : "")" @onclick="() => _showInspector = true" aria-pressed="@(_showInspector ? "true" : "false")">Analysis</button>
                 </div>
             </div>
 
@@ -122,8 +122,12 @@
                 <button class="spin-button" aria-label="Spin" @onclick="Spin" disabled="@(_spinning || _balance < _bet)"><span>@(_spinning ? _isBonus ? "FREE SPINS" : "WEAVING" : "SPIN")</span><small>@(_spinning ? "Please wait" : "Space to spin")</small></button>
             </div>
             <div class="utility-bar">
-                <button @onclick="ToggleSound" aria-pressed="@_sound">Sound @(_sound ? "on" : "off")</button>
-                <button @onclick="() => _quick = !_quick" aria-pressed="@_quick">Quick @(_quick ? "on" : "off")</button>
+                <button class="icon-toggle" @onclick="ToggleSound" aria-pressed="@(_sound ? "true" : "false")" aria-label="Sound" title="Sound">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/>@if (_sound) {<path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>} else {<path d="M16.5 9.5l5 5m0-5l-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>}</svg>
+                </button>
+                <button class="icon-toggle" @onclick="() => _quick = !_quick" aria-pressed="@(_quick ? "true" : "false")" aria-label="Quick spin" title="Quick spin">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2L4 14h7l-1 8 9-12h-7z" fill="currentColor"/></svg>
+                </button>
                 <button @onclick="PreviewFeature" disabled="@_spinning">@(_previewComplete ? "Replay feature preview" : "Preview feature")</button>
             </div>
             @if (_balance < _bet)

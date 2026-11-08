@@ -3,7 +3,7 @@ const { test, expect } = require('@playwright/test');
 test('rules, analysis view and one paid spin', async ({ page }) => {
   await page.goto(process.env.GAME_URL || 'http://127.0.0.1:5098/');
   await expect(page.getByRole('heading', { name: /aether loom/i })).toBeVisible({ timeout: 20000 });
-  await expect(page.getByText('AN ORIGINAL 243-WAYS GAME')).toBeVisible();
+  await expect(page.locator('.tension-ladder')).toBeVisible();
 
   await page.getByRole('button', { name: /pays & rules/i }).click();
   await expect(page.getByRole('heading', { name: /pays & feature/i })).toBeVisible();

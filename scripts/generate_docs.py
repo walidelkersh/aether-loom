@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 """Generate every human-readable math artifact from the committed machine reports.
 
-Nothing in docs/math.md, advantage-play.md, sensitivity-analysis.md, reel-strips.md,
-sensitivity.svg or PAR-sheet.html is typed by hand: each number is read from reports/*.json, which the C#
+Nothing in docs/math.md, advantage-play.md, reel-strips.md or PAR-sheet.html is typed by hand: each number is read from reports/*.json, which the C#
 analyzers and simulator write. Regenerate after any configuration change:
 
     dotnet run --project src/SlotGame.Simulation -c Release -- --par --output reports/par-sheet.json
@@ -12,7 +11,6 @@ analyzers and simulator write. Regenerate after any configuration change:
 from __future__ import annotations
 
 import hashlib
-import html
 import json
 from collections import Counter
 from pathlib import Path
@@ -246,9 +244,6 @@ small and large wins while keeping the mean; a distribution test can.
 - This is a portfolio model. It has not been reviewed by a test laboratory or regulator.
 """)
 
-verify = VERIFY_PART.strip().replace("\n## ", "\n### ")
-verify = verify.replace("# Verification: how the numbers are known to be right", "## Verification", 1)
-write("docs/math.md", MATH_PART.strip() + "\n\n" + verify)
 
 # ------------------------------------------------------------------------------------------------ advantage play
 write("docs/advantage-play.md", f"""
@@ -315,7 +310,7 @@ lines = [
     f"{pct(r['SimulatedHitFrequency'], 4)} | {r['SimulatedStandardDeviation']:.4f}× | {r['ExactMaximumGameCycleAward']:,.2f}× |"
     for r in SENSITIVITY
 ]
-write("docs/sensitivity-analysis.md", f"""
+SENS_PART = (f"""
 # Sensitivity analysis
 
 Each row changes one parameter family. Exact RTP, feature frequency and **reachable** maximum exposure are recomputed
@@ -335,19 +330,15 @@ Rebalancing example: to double feature frequency at constant RTP, feature RTP = 
 {feature_ev / 2:.1f}×. Because Sparks also drive the base state, adding Sparks shifts π toward the richer base sets as well,
 so the whole model is re-solved rather than one term scaled.
 
-![Sensitivity chart](sensitivity.svg)
 """)
 
-bars = []
-max_rtp = max(r["ExactRtp"] for r in SENSITIVITY)
-for i, r in enumerate(SENSITIVITY):
-    y = 45 + i * 34
-    w = r["ExactRtp"] / max_rtp * 520
-    color = "#c9ff3b" if r["Parameter"] == "Baseline" else "#8a9a8b"
-    bars.append(f'<text x="8" y="{y + 13}" fill="#dce5da" font-size="10">{html.escape(r["Parameter"])} · {html.escape(r["Level"])}</text>'
-                f'<rect x="245" y="{y}" width="{w:.2f}" height="18" fill="{color}"/>'
-                f'<text x="{250 + w:.2f}" y="{y + 13}" fill="#dce5da" font-size="10">{r["ExactRtp"] * 100:.2f}%</text>')
-write("docs/sensitivity.svg", f'<svg xmlns="http://www.w3.org/2000/svg" width="900" height="370" viewBox="0 0 900 370" role="img" aria-labelledby="title desc"><title id="title">Exact RTP sensitivity</title><desc id="desc">Horizontal bars compare exact RTP for nine controlled scenarios.</desc><rect width="900" height="370" fill="#0b0f0c"/><text x="8" y="22" fill="#c9ff3b" font-family="monospace" font-size="14">EXACT RTP BY ONE-AT-A-TIME PARAMETER CHANGE</text><g font-family="monospace">{"".join(bars)}</g></svg>')
+def section(part: str, title: str) -> str:
+    body = part.strip().replace("\n## ", "\n### ")
+    return "## " + title + body[body.index("\n"):]
+
+
+write("docs/math.md", MATH_PART.strip() + "\n\n" + section(SENS_PART, "Sensitivity analysis")
+      + "\n\n" + section(VERIFY_PART, "Verification"))
 
 # ------------------------------------------------------------------------------------------------- reel strips
 codes = CONFIG["symbolCodes"]
@@ -479,4 +470,4 @@ Configuration SHA-256 {CONFIG_HASH}. Every number is generated from reports/*.js
 </body></html>"""
 write("docs/PAR-sheet.html", par_html)
 
-print("Generated math, advantage-play, sensitivity, reel-strips, sensitivity.svg and PAR-sheet.html.")
+print("Generated math, advantage-play, reel-strips and PAR-sheet.html.")

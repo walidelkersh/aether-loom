@@ -11,3 +11,4 @@ docs/*.toc
 .DS_Store
 *.user
 *.suo
+docs/PAR-sheet.html

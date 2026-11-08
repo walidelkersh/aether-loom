@@ -125,7 +125,6 @@
                 <button @onclick="ToggleSound" aria-pressed="@_sound">Sound @(_sound ? "on" : "off")</button>
                 <button @onclick="() => _quick = !_quick" aria-pressed="@_quick">Quick @(_quick ? "on" : "off")</button>
                 <button @onclick="PreviewFeature" disabled="@_spinning">@(_previewComplete ? "Replay feature preview" : "Preview feature")</button>
-                <button @onclick="OpenRules">How to play</button>
             </div>
             @if (_balance < _bet)
             {
@@ -144,7 +143,7 @@
         }
     </section>
 
-    <footer class="project-foot"><span>Fictional credits only · no wagering</span><a href="https://walidelkersh.vercel.app/projects/aether-loom" target="_blank">Case study ↗</a></footer>
+    <footer class="project-foot"><span>Fictional credits only · no wagering</span><a href="https://elkersh.is-a.dev/projects/aether-loom" target="_blank">Case study ↗</a></footer>
 
     @if (_showPays)
     {

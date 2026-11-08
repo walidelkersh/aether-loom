@@ -15,7 +15,7 @@ test('rules, analysis view and one paid spin', async ({ page }) => {
   await expect(page.getByText('BASE_REST').first()).toBeVisible();
   await page.getByRole('button', { name: 'Cabinet' }).click();
 
-  const spin = page.getByRole('button', { name: /spin/i });
+  const spin = page.getByRole('button', { name: 'Spin', exact: true });
   await spin.click();
   await expect(spin).toBeEnabled({ timeout: 20000 });
   await expect(page.locator('.win-readout strong')).toContainText('credits');

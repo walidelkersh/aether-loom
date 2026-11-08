@@ -21,7 +21,7 @@ public sealed class WaysEvaluatorTests
         Assert.Equal(SymbolId.Crown, win.Symbol);
         Assert.Equal(3, win.ReelsMatched);
         Assert.Equal(6, win.Ways);
-        Assert.Equal(2.4, win.Award(1), 10);
+        Assert.Equal(2.4m, win.Award(1m));
     }
 
     [Fact]
@@ -36,7 +36,7 @@ public sealed class WaysEvaluatorTests
         var win = Assert.Single(new WaysWinEvaluator(_config.Paytable).Evaluate(grid));
         Assert.Equal(SymbolId.Moth, win.Symbol);
         Assert.Equal(2, win.Ways);
-        Assert.Equal(0.6, win.Award(1), 10);
+        Assert.Equal(0.6m, win.Award(1m));
     }
 
     [Fact]
@@ -46,7 +46,7 @@ public sealed class WaysEvaluatorTests
         for (var reel = 0; reel < 5; reel++) grid[0, reel] = SymbolId.Crown;
         var win = Assert.Single(new WaysWinEvaluator(_config.Paytable).Evaluate(grid));
         Assert.Equal(5, win.ReelsMatched);
-        Assert.Equal(4, win.Multiplier);
+        Assert.Equal(4m, win.Multiplier);
     }
 
     [Fact]

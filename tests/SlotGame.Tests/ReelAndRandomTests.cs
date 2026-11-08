@@ -17,8 +17,8 @@ public sealed class ReelAndRandomTests
     public void SameSeedProducesSameCycle()
     {
         var config = GameConfiguration.LoadDefault();
-        var first = new GameEngine(config, new Pcg32Random(123456)).Play(1, TensionState.Rest);
-        var second = new GameEngine(config, new Pcg32Random(123456)).Play(1, TensionState.Rest);
+        var first = new GameEngine(config, new Pcg32Random(123456)).Play(1m, TensionState.Rest);
+        var second = new GameEngine(config, new Pcg32Random(123456)).Play(1m, TensionState.Rest);
         Assert.Equal(first.BaseSpin.Spin.Stops, second.BaseSpin.Spin.Stops);
         Assert.Equal(first.TotalAward, second.TotalAward);
         Assert.Equal(Flatten(first.BaseSpin.Spin.Grid), Flatten(second.BaseSpin.Spin.Grid));
@@ -28,8 +28,8 @@ public sealed class ReelAndRandomTests
     public void DifferentSeedsChangeStopSequence()
     {
         var config = GameConfiguration.LoadDefault();
-        var first = new GameEngine(config, new Pcg32Random(1)).PlayBase(1, TensionState.Rest);
-        var second = new GameEngine(config, new Pcg32Random(2)).PlayBase(1, TensionState.Rest);
+        var first = new GameEngine(config, new Pcg32Random(1)).PlayBase(1m, TensionState.Rest);
+        var second = new GameEngine(config, new Pcg32Random(2)).PlayBase(1m, TensionState.Rest);
         Assert.False(first.Spin.Stops.SequenceEqual(second.Spin.Stops));
     }
 

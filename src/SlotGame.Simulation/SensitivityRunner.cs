@@ -27,8 +27,8 @@ public static class SensitivityRunner
             ("Bonus wilds per reel", "+1", WithBonusWildDelta(baseline, 1)),
             ("Base Spark density", "lower", WithBaseSparkDelta(baseline, -1)),
             ("Base Spark density", "higher", WithBaseSparkDelta(baseline, 1)),
-            ("Stage multipliers", "1x / 1.5x / 3x", baseline.With(stageMultipliers: [1, 1.5, 3])),
-            ("Stage multipliers", "1x / 2x / 4x", baseline.With(stageMultipliers: [1, 2, 4])),
+            ("Stage multipliers", "1x / 1.5x / 3x", baseline.With(stageMultipliers: [1m, 1.5m, 3m])),
+            ("Stage multipliers", "1x / 2x / 4x", baseline.With(stageMultipliers: [1m, 2m, 4m])),
             ("Initial free spins", "6", baseline.With(initialFreeSpins: 6)),
             ("Initial free spins", "8", baseline.With(initialFreeSpins: 8))
         };
@@ -50,13 +50,13 @@ public static class SensitivityRunner
         return results;
     }
 
-    private static GameConfiguration WithBonusWildDelta(GameConfiguration config, int delta)
+    public static GameConfiguration WithBonusWildDelta(GameConfiguration config, int delta)
     {
         var names = new HashSet<string>(StringComparer.Ordinal) { "BONUS_REST", "BONUS_TAUT", "BONUS_OVERDRIVE" };
         return WithSpecialDelta(config, names, SymbolId.Wild, delta, skipFirstReel: true);
     }
 
-    private static GameConfiguration WithBaseSparkDelta(GameConfiguration config, int delta)
+    public static GameConfiguration WithBaseSparkDelta(GameConfiguration config, int delta)
     {
         var names = new HashSet<string>(StringComparer.Ordinal) { "BASE_REST", "BASE_TAUT", "BASE_OVERDRIVE" };
         return WithSpecialDelta(config, names, SymbolId.Spark, delta, skipFirstReel: false);

@@ -5,9 +5,11 @@ public enum TensionState { Rest = 0, Taut = 1, Overdrive = 2 }
 
 public sealed record SymbolDefinition(SymbolId Id, string DisplayName, bool IsWild = false, bool IsScatter = false);
 
-public sealed record SymbolWin(SymbolId Symbol, int ReelsMatched, int Ways, double Multiplier)
+/// <summary>One symbol's ways win. <see cref="Multiplier"/> is the paytable value per way, in units of total bet.</summary>
+public sealed record SymbolWin(SymbolId Symbol, int ReelsMatched, int Ways, decimal Multiplier)
 {
-    public double Award(double bet, double stageMultiplier = 1.0) => Multiplier * Ways * bet * stageMultiplier;
+    /// <summary>Credits paid. Decimal arithmetic: 0.07 x 3 ways x 0.20 bet is exactly 0.042, never 0.04200000000000001.</summary>
+    public decimal Award(decimal bet, decimal stageMultiplier = 1m) => Multiplier * Ways * bet * stageMultiplier;
 }
 
 public sealed record SpinResult(
@@ -16,10 +18,10 @@ public sealed record SpinResult(
     SymbolId[,] Grid,
     IReadOnlyList<SymbolWin> Wins,
     int ScatterCount,
-    double Bet,
-    double StageMultiplier)
+    decimal Bet,
+    decimal StageMultiplier)
 {
-    public double Award => Wins.Sum(win => win.Award(Bet, StageMultiplier));
+    public decimal Award => Wins.Sum(win => win.Award(Bet, StageMultiplier));
     public bool IsHit => Award > 0;
 }
 
@@ -34,13 +36,13 @@ public sealed record BonusSpinResult(
 
 public sealed record BonusResult(TensionState StartingStage, IReadOnlyList<BonusSpinResult> Spins)
 {
-    public double Award => Spins.Sum(spin => spin.Spin.Award);
+    public decimal Award => Spins.Sum(spin => spin.Spin.Award);
     public int SpinsPlayed => Spins.Count;
 }
 
 public sealed record GameCycleResult(BaseSpinResult BaseSpin, BonusResult? Bonus)
 {
-    public double BaseAward => BaseSpin.Spin.Award;
-    public double FeatureAward => Bonus?.Award ?? 0;
-    public double TotalAward => BaseAward + FeatureAward;
+    public decimal BaseAward => BaseSpin.Spin.Award;
+    public decimal FeatureAward => Bonus?.Award ?? 0m;
+    public decimal TotalAward => BaseAward + FeatureAward;
 }

@@ -1,17 +1,22 @@
 {
-  "generatedAtUtc": "2026-09-09T08:29:27.735775+00:00",
-  "Version": "1.0.0",
+  "generatedAtUtc": "2026-11-08T20:54:34.9244939+00:00",
+  "Version": "1.1.0",
   "GameName": "Aether Loom",
   "exact": {
-    "BaseRtp": 0.8043164153159941,
-    "FeatureRtp": 0.1613527330186247,
-    "TotalRtp": 0.9656691483346188,
-    "FeatureTriggerProbability": 0.004206244043355317,
-    "BaseHitProbability": 0.6482098585069458,
+    "BaseRtp": 0.8043164153159983,
+    "FeatureRtp": 0.16135273301863862,
+    "TotalRtp": 0.9656691483346369,
+    "FeatureTriggerProbability": 0.00420624404335547,
+    "BaseHitProbability": 0.6482098585069459,
     "stationaryStateProbabilities": [
-      0.9321163470123953,
-      0.06296151368368005,
-      0.0049221393039246405
+      0.9321163470123749,
+      0.06296151368369796,
+      0.004922139303927144
+    ],
+    "conditionalStateRtp": [
+      0.9129400405052278,
+      1.5309032293564364,
+      3.720908122088126
     ],
     "transitionMatrix": [
       [
@@ -246,16 +251,32 @@
         "ExpectedAward": 96.01765794971692,
         "ExpectedSpins": 8.370532008162368
       }
-    ]
+    ],
+    "Variance": 14.912377349902268,
+    "StandardDeviation": 3.861654742452032,
+    "AsymptoticVariance": 14.831975678689085,
+    "HitFrequency": 0.650917616743921,
+    "baseWinDistribution": [
+      0.3517901414930539,
+      0.3930691980561526,
+      0.1377989311555313,
+      0.0958914606151214,
+      0.019020718188281452,
+      0.0023314121671845407,
+      9.812193356638909E-05,
+      1.639110842421841E-08,
+      0
+    ],
+    "rtpHalfWidth95FromAsymptoticVariance": 0.002386973495832462
   },
   "simulation": {
     "PaidSpins": 10000000,
     "Seed": 20260908,
     "TotalWager": 10000000,
-    "TotalPayout": 9663897.714952786,
-    "ObservedRtp": 0.9663897714952786,
-    "BaseRtp": 0.8049968739917345,
-    "FeatureRtp": 0.16139289749999935,
+    "TotalPayout": 9663897.715,
+    "ObservedRtp": 0.9663897714999999,
+    "BaseRtp": 0.804996874,
+    "FeatureRtp": 0.16139289750000002,
     "HitFrequency": 0.6510934,
     "BaseHitFrequency": 0.6483874,
     "FeatureTriggers": 42060,
@@ -263,12 +284,14 @@
     "FreeSpinsPlayed": 352061,
     "FreeSpinFrequency": 0.0352061,
     "FreeSpinsPerTrigger": 8.370446980504042,
-    "AverageWin": 1.4842567464134617,
+    "AverageWin": 1.4842567464207133,
     "Variance": 15.018659383842408,
     "StandardDeviation": 3.87539151362058,
-    "VolatilityIndex": 3.87539151362058,
+    "VolatilityIndex90": 6.374453232744865,
     "MaximumObservedWin": 731.7875,
-    "RtpConfidenceHalfWidth95": 0.0024019926656536185,
+    "RtpConfidenceHalfWidth95Iid": 0.002401948547420984,
+    "RtpConfidenceHalfWidth95BatchMeans": 0.002582392243631511,
+    "Batches": 100,
     "StateVisits": [
       9322129,
       628812,
@@ -278,6 +301,31 @@
       34900,
       5816,
       1344
+    ],
+    "BaseWinBuckets": [
+      3516126,
+      3932445,
+      1377446,
+      958877,
+      190538,
+      23565,
+      1003,
+      0,
+      0
+    ]
+  },
+  "distributionTest": {
+    "Statistic": 5.644696156736369,
+    "DegreesOfFreedom": 6,
+    "PValue": 0.46414353395253594,
+    "PooledBuckets": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
     ]
   }
 }

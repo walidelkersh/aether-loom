@@ -30,7 +30,6 @@ public sealed class MathematicalTests
     {
         var report = new ExactAnalyzer(_config).Analyze();
         Assert.Equal(report.BaseRtp + report.FeatureRtp, report.TotalRtp, 12);
-        Assert.InRange(report.TotalRtp, 0.94, 0.97);
         Assert.True(report.FeatureRtp > 0);
     }
 

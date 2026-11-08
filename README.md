@@ -1,124 +1,124 @@
 ![Aether Loom playable game](docs/images/gameplay.png)
 
-# Aether Loom
+# Aether Loom: slot game mathematics, end to end
 
-[**PLAY LIVE**](https://walidelkersh.github.io/aether-loom/) · [**PORTFOLIO CASE STUDY**](https://walidelkersh.vercel.app/projects/aether-loom) · [**VIEW PAR SHEET**](docs/PAR-sheet.pdf) · [**READ THE MATH**](docs/math-report.md) · [**INSPECT REEL STRIPS**](docs/reel-strips.md)
+[**PLAY LIVE**](https://walidelkersh.github.io/aether-loom/) · [**PAR SHEET (PDF)**](docs/PAR-sheet.pdf) · [**MATH REPORT**](docs/math-report.md) · [**VERIFICATION**](docs/verification.md) · [**CASE STUDY**](docs/case-study.md)
 
-Aether Loom is an original 5×3, 243-ways slot mathematics portfolio project. Two Spark symbols tighten a persistent loom state; the resulting Rest, Taut, or Overdrive state selects the next ordered reel set and becomes the starting stage of a seven-spin bonus. In the bonus, two Sparks advance the stage, add a spin, and move play toward richer Wild strips and larger multipliers, with a hard limit of 12 feature spins.
+An original 5×3, 243-ways slot designed from physical reel strips up. Spark symbols move a persistent
+**Rest → Taut → Overdrive** tension state that selects the next reel set and becomes the starting stage of a 7–12 spin
+feature. I designed the mechanic and paytable, derived the exact RTP and volatility with a Markov-chain model, built the
+C# engine, simulator and a playable Blazor client, and verified the math several independent ways. Fictional credits only.
 
-This is a fictional-credit demonstration. It has no deposits, purchases, payments, or real-money wagering.
+## What this project demonstrates
 
-## Verified model at a glance
+| Game-math skill | Evidence in this repo |
+|---|---|
+| Exact RTP from physical reel strips | [`ExactAnalyzer`](src/SlotGame.Core/ExactAnalysis.cs): window distributions → ways EV → Markov chain → feature recursion |
+| Exact volatility, not just simulated | [`ParAnalyzer`](src/SlotGame.Core/DistributionAnalysis.cs): all 40⁵ = 102.4M stop combinations per reel set in about 1 s; variance, SD, volatility index, hit rate, win distribution |
+| PAR sheet in studio format | [PDF](docs/PAR-sheet.pdf) generated from the machine reports: paytable, strip counts, RTP budget, Markov chain, volatility, win distribution |
+| Markov chains and stateful features | Stationary distribution by direct solve, fundamental matrix, relative state values, correlation-corrected variance σ²∞ |
+| Monte Carlo done properly | Seeded PCG32, Welford moments, batch-means CI, exact correlation-corrected CI, chi-square test of the win distribution |
+| Independent verification | [Python reference](scripts/independent_check.py) written from the rules, sharing no code with C#; it produces the **identical RTP fraction**; CI fails on any mismatch |
+| Finding design exploits | [Bet-switching analysis](docs/advantage-play.md): 152.23% return under v1.0's shared state, fixed with per-bet-level state |
+| Exposure / max-win analysis | [`ExtremeAnalyzer`](src/SlotGame.Core/ExtremeAnalysis.cs): reachable maximum via dynamic programming that propagates impossible branches |
+| Balancing and sensitivity | [One-at-a-time sweeps](docs/sensitivity-analysis.md) over Wild density, Spark density, multipliers, free spins |
+| Production-minded C# | Decimal settlement, injectable `IRandomSource`, config validation, 56 xUnit tests, GitHub Actions CI, Playwright E2E |
 
-| Quantity | Result | Classification |
+## PAR at a glance
+
+| Metric | Value | How it is known |
 |---|---:|---|
-| Total RTP | **96.566915%** | Exact |
-| Base ways RTP | 80.431642% | Exact |
-| Feature RTP | 16.135273% | Exact |
-| Base hit probability | 64.820986% | Exact |
-| Feature frequency | 0.420624% / 1 in 237.74 | Exact |
-| Stationary state mix | 93.2116% / 6.2962% / 0.4922% | Exact |
-| Observed RTP | 96.638977% ± 0.240199% | 10,000,000-spin 95% CI |
-| Overall hit frequency | 65.109340% | Simulation |
-| Variance | 15.018659 bet² | Simulation |
-| Standard deviation / volatility index | 3.875392× bet | Simulation |
-| Maximum observed award | 731.79× | Simulation |
-| Maximum reachable game cycle | 11,227.60× | Exact |
+| **Total RTP** | **96.566915%** | Exact (rational fraction, 20 dp: 0.96566914833464226035) |
+| Base game / feature | 80.431642% / 16.135273% | Exact |
+| Hit frequency (any award) | 65.0918% (1 in 1.536) | Exact enumeration |
+| Feature frequency | 0.420624% (1 in 237.74) | Exact |
+| Average feature award | 38.36× bet over 8.37 spins | Exact |
+| Standard deviation | 3.8617× bet (variance 14.9124) | Exact enumeration |
+| Volatility index (90%) | 6.35 | Exact (1.645 σ) |
+| Long-run variance with state correlation | 14.8320 (−0.54% vs. i.i.d.) | Exact (fundamental matrix) |
+| Stationary state mix | 93.21% / 6.30% / 0.49% | Exact |
+| Conditional RTP by state | 91.29% / 153.09% / 372.09% | Exact |
+| Max base award / max paid cycle | 88.00× / 11,227.60× | Exact, reachable outcomes only |
+| Simulated RTP, 10M spins (seed 20260908) | 96.638977% | z = +0.59 against exact, correlation-corrected |
+| Largest observed award | 731.79× | Simulation (not the maximum) |
 
-The exact total is inside the seeded simulation's 96.398778%–96.879176% confidence interval. See the full [exact-versus-simulation report](docs/verification.md).
+## Verification, in one table
 
-## What is original
+| Check | Result |
+|---|---|
+| Float analyzer vs. BigInteger rational analyzer vs. 40⁵ enumeration | Agree; closed-form and enumerated ways EV are identical fractions |
+| Independent Python implementation from the written rules | Identical RTP fraction |
+| 10M-spin simulation, 95% CI: i.i.d. / batch means / exact σ∞ | ±0.240 / ±0.258 / ±0.239 pp; exact value inside all three |
+| Chi-square, simulated vs. exact base win distribution | χ² = 5.64, 6 df, p = 0.46 |
+| Hand-calculated fixtures | 8-way Crown = 3.20×, 4-reel extension = 7.20×, shared Wild = 0.37×, exact decimal settlement |
+| Adversarial bet-switching player | 153.5% with shared state (v1.0) → 96.7% with per-bet state (v1.1) |
 
-Tension is a paid-spin Markov state, not a decorative meter. The current state chooses one of three physical base reel sets. Zero, one, two, or three-plus Sparks produce different transitions, and an Overdrive spin always vents to Rest. The feature inherits this state, then uses a finite Markov reward process with stage-specific reel sets and 1×, 1.75×, and 3.5× multipliers.
+Details and limitations: [docs/verification.md](docs/verification.md).
 
-That mechanic creates a design problem with visible consequences: scatter placement controls state occupancy and feature frequency; Wild placement controls state EV; stage multipliers allocate the feature budget; and the 12-spin bound controls exposure. The [sensitivity analysis](docs/sensitivity-analysis.md) changes these parameters one at a time and recomputes the results.
+## Version 1.1: review findings and fixes
 
-## Reel and win model
+A review of v1.0 found five issues that the RTP number alone did not reveal:
 
-- Six named reel sets, each containing five circular 40-stop strips.
-- A uniformly selected stop supplies the top symbol; the next two stops supply the middle and bottom.
-- Wild and Spark symbols are spaced by at least three circular positions, limiting each to one visible occurrence per reel.
-- Reel 1 has no Wild.
-- A symbol pays on three or more consecutive reels from the left. Ways are the product of matching symbol/Wild counts on those reels.
-- Only the longest occurrence of each symbol pays; different symbol wins add.
-- Spark has no direct cash pay.
+1. **Bet-switching exploit.** One tension state was shared across bet levels, so a player could build tension at 0.20 and spend it at 10.00 for a 152.23% return. State is now owned per bet level and cleared on cash-out ([advantage-play.md](docs/advantage-play.md)).
+2. **Max-win analyzer added impossible events.** In a reduced-Spark configuration it reported 11,227× when the feature could not trigger; the reachable maximum is 49.60×. Impossible branches now propagate, and base-state reachability is checked.
+3. **Tests checked consistency, not correctness.** The RTP test accepted anything from 94% to 97%. Tests now pin 12-digit values from the independent reference.
+4. **Money held in `double`.** Settlement is now `decimal`. The 10M-spin run reproduces v1.0 to the last digit, which shows the change kept game behaviour identical.
+5. **Documentation drift.** The spec said 48-stop reels (the build uses 40) and did not mention that BASE_OVERDRIVE and BONUS_REST share strips. Both are fixed and detected in code.
 
-The canonical, embedded configuration is [config/game-config.json](config/game-config.json). Human-readable counts and ordered strips are in [docs/reel-strips.md](docs/reel-strips.md).
+## Game rules
 
-## Mathematical analysis
+- Six named reel sets (five distinct strip configurations), each five circular 40-stop strips; a uniform stop shows that stop and the next two.
+- 243 ways from reel 1 across 3+ consecutive reels; Wild substitutes (never on reel 1); different symbols add; longest match per symbol pays.
+- **Tension** after a paid spin: 0 Sparks lowers, 1 holds, 2 raises; Overdrive always vents to Rest; 3+ Sparks trigger the feature and reset to Rest. Tension is stored per bet level.
+- **Weave Ascending**: 7 free spins starting at the earned stage (1×, 1.75×, 3.5× multipliers and richer Wild strips). 2+ Sparks add a spin and raise the stage. Hard cap of 12 spins.
 
-`ExactAnalyzer` enumerates every stop when it builds each reel's three-symbol window distribution. It then computes:
-
-- per-symbol ways EV across five independent reel-window count distributions;
-- scatter-count distributions and state transition probabilities;
-- the base-state stationary distribution;
-- exact feature-entry probability;
-- exact feature EV and duration with finite reward recursion;
-- exact base hit probability from the first three reel windows.
-
-`ExtremeAnalyzer` performs reachable-profile dynamic programming to find maximum base, feature, and full-cycle awards. Monte Carlo independently executes the production state loop and uses Welford's recurrence for numerically stable variance.
+$$\text{RTP}=\sum_{s}\pi_s\,(B_s+t_sF_s),\qquad \pi P=\pi$$
 
 ## Architecture
 
 ```mermaid
 flowchart LR
   J[game-config.json] --> C[SlotGame.Core]
-  C --> E[Exact + extreme analysis]
+  C --> E[Exact, rational, enumeration and extreme analyzers]
   C --> S[Simulation CLI]
   C --> P[Blazor WebAssembly playable]
-  S --> R[Machine reports]
-  R --> D[Math report / verification / PAR sheet]
-  J --> A[Experimental Stake Engine adapter]
+  J --> Y[Independent Python reference]
+  E --> R[reports/*.json]
+  S --> R
+  Y -. must match .-> R
+  R --> D[generate_docs.py → math report, verification, PAR PDF]
 ```
 
-- `src/SlotGame.Core` — canonical strips, PCG32 RNG, ways evaluator, persistent state, bonus, exact analysis.
-- `src/SlotGame.Simulation` — CLI, Welford statistics, seeded Monte Carlo, sensitivity runner, fixture export.
-- `src/SlotGame.Playable` — browser client that references `SlotGame.Core` directly.
-- `tests/SlotGame.Tests` — 27 unit, invariant, deterministic, and statistical tests.
-- `tests/e2e` — recruiter-flow browser test.
-- The cabinet includes optional sound, quick play, keyboard controls, and a labeled feature preview using separate randomness and no balance changes.
-- `integrations/stake-engine` — experimental public-SDK representation and nine-fixture parity check.
-
-The [existing-work assessment](docs/architecture-assessment.md) explains what was inspected and why the previous weighted-cell simulator was not reused as the canonical model.
+- `src/SlotGame.Core`: strips, `IRandomSource`/PCG32, ways evaluator, game engine, `StateLedger`, and four analyzers.
+- `src/SlotGame.Simulation`: CLI for simulation, PAR, bet-switch, sensitivity, and fixtures.
+- `src/SlotGame.Playable`: browser cabinet that runs the same `SlotGame.Core` assembly as the tests.
+- `tests/SlotGame.Tests`: 56 tests (exact-value, hand-calculated, invariant, exposure, statistical). `tests/e2e`: Playwright.
+- `scripts/`: independent Python check, document and PAR generators, `reproduce.sh`.
 
 ## Run it
 
-Requires .NET 8. The browser test also requires Node.js and Playwright Chromium.
+Requires .NET 8 SDK. Optional: Python 3.10+, Node 22 for E2E.
 
 ```bash
-dotnet build AetherLoom.sln --configuration Release
-dotnet test AetherLoom.sln --configuration Release
-
-dotnet run --project src/SlotGame.Simulation -- --spins 1000000 --seed 20260908
-dotnet run --project src/SlotGame.Simulation -- --theory-only
-dotnet run --project src/SlotGame.Simulation -- --extremes
-dotnet run --project src/SlotGame.Simulation -- --sensitivity --spins 500000
-
-dotnet run --project src/SlotGame.Playable
+dotnet test AetherLoom.sln -c Release                                     # 56 tests
+dotnet run --project src/SlotGame.Simulation -c Release -- --par          # exact PAR in ~1 s
+dotnet run --project src/SlotGame.Simulation -c Release -- --spins 1000000
+dotnet run --project src/SlotGame.Simulation -c Release -- --bet-switch   # exploit vs fix
+dotnet run --project src/SlotGame.Simulation -c Release -- --help
+python scripts/independent_check.py                                       # Python vs C#
+dotnet run --project src/SlotGame.Playable                                # play locally
 ```
 
-To reproduce documentation inputs:
+Reproduce every committed number and document: `bash scripts/reproduce.sh` (about one minute).
 
-```bash
-dotnet run --project src/SlotGame.Simulation -- --spins 10000000 --seed 20260908 --output reports/verified-metrics.json
-dotnet run --project src/SlotGame.Simulation -- --extremes --output reports/extremes.json
-dotnet run --project src/SlotGame.Simulation -- --sensitivity --spins 500000 --seed 77001 --output reports/sensitivity.json
-python scripts/generate_docs.py
-```
+## Honest scope
 
-## What I Built
-
-This repository's game concept, state mechanic, paytable, six reel sets, C# core, exact analyzer, extreme-value analyzer, simulation executable, Blazor playable, Cabinet/Analysis view, tests, reports, PAR sheet, art direction, and case study were created specifically for Aether Loom. The symbol atlas and workshop backdrop were generated as original project assets from custom prompts; no third-party game art is included. The earlier slot simulation engine was inspected for useful boundaries and validation ideas; its Python/JavaScript implementation and independent weighted-cell outcome model were not copied into this project.
+This is a portfolio model, not a regulated product. It uses fictional credits, resolves outcomes in the browser, and uses
+PCG32, a reproducible simulation generator that is not a certified RNG. It has not been reviewed by a test laboratory. It
+shows I can design, derive, implement and verify a stateful slot model, and that I look for the places where it breaks.
 
 ## Further reading
 
-- [Game design and math specification](docs/game-design.md)
-- [Mathematical model and RTP budget](docs/math-report.md)
-- [Exact versus simulation](docs/verification.md)
-- [Sensitivity analysis](docs/sensitivity-analysis.md)
-- [Portfolio case study](docs/case-study.md)
-- [Experimental Stake Engine representation](integrations/stake-engine/README.md)
-- [Visual direction and asset provenance](docs/art-direction.md)
-- [Cabinet interaction and verification notes](docs/playable-polish.md)
+[Game design spec](docs/game-design.md) · [Math report](docs/math-report.md) · [Verification](docs/verification.md) · [Advantage play](docs/advantage-play.md) · [Sensitivity](docs/sensitivity-analysis.md) · [Reel strips](docs/reel-strips.md) · [Case study](docs/case-study.md) · [Stake Engine representation](integrations/stake-engine/README.md) · [Art direction](docs/art-direction.md)
 
-Released under the [MIT License](LICENSE). The project makes no regulatory or production-compatibility claim.
+Released under the [MIT License](LICENSE). The symbol atlas and backdrop are original generated assets; no third-party game art is included.

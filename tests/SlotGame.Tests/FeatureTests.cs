@@ -25,7 +25,7 @@ public sealed class FeatureTests
         Assert.Throws<ArgumentOutOfRangeException>(() => GameEngine.NextBaseState((TensionState)99, 0));
         Assert.Throws<ArgumentOutOfRangeException>(() => GameEngine.NextBaseState(TensionState.Rest, -1));
         Assert.Throws<ArgumentOutOfRangeException>(() => GameEngine.NextBaseState(TensionState.Rest, 16));
-        Assert.Throws<ArgumentOutOfRangeException>(() => new GameEngine(_config, new Pcg32Random(1)).Play(0.3, TensionState.Rest));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new GameEngine(_config, new Pcg32Random(1)).Play(0.3m, TensionState.Rest));
     }
 
     [Fact]
@@ -33,7 +33,7 @@ public sealed class FeatureTests
     {
         var set = _config.BaseReelSet(TensionState.Rest);
         var stops = StopsWithScatterCount(set, 3);
-        var result = new GameEngine(_config, new SequenceRandom(stops)).PlayBase(1, TensionState.Rest);
+        var result = new GameEngine(_config, new SequenceRandom(stops)).PlayBase(1m, TensionState.Rest);
         Assert.True(result.FeatureTriggered);
         Assert.Equal(3, result.Spin.ScatterCount);
         Assert.Equal(TensionState.Rest, result.StateAfter);
@@ -44,7 +44,7 @@ public sealed class FeatureTests
     {
         var set = _config.BonusReelSet(TensionState.Rest);
         var stops = StopsWithScatterCount(set, 2);
-        var result = new GameEngine(_config, new SequenceRandom(stops)).PlayBonus(1, TensionState.Rest);
+        var result = new GameEngine(_config, new SequenceRandom(stops)).PlayBonus(1m, TensionState.Rest);
         var first = result.Spins[0];
         Assert.Equal(TensionState.Rest, result.StartingStage);
         Assert.Equal(TensionState.Rest, first.StageBefore);
@@ -58,7 +58,7 @@ public sealed class FeatureTests
         var set = _config.BonusReelSet(TensionState.Overdrive);
         var forcingStops = StopsWithScatterCount(set, 2);
         var sequence = Enumerable.Range(0, _config.MaximumFeatureSpins).SelectMany(_ => forcingStops).Select(x => (uint)x);
-        var result = new GameEngine(_config, new SequenceRandom(sequence)).PlayBonus(1, TensionState.Overdrive);
+        var result = new GameEngine(_config, new SequenceRandom(sequence)).PlayBonus(1m, TensionState.Overdrive);
         Assert.Equal(_config.MaximumFeatureSpins, result.SpinsPlayed);
         Assert.False(result.Spins[^1].ExtraSpinAwarded);
         Assert.All(result.Spins, spin => Assert.True(spin.Spin.Award >= 0));
@@ -68,10 +68,10 @@ public sealed class FeatureTests
     public void BetScalesPayoutWithoutChangingOutcome()
     {
         uint[] stops = [1, 2, 3, 4, 5];
-        var one = new GameEngine(_config, new SequenceRandom(stops)).PlayBase(1, TensionState.Rest);
-        var five = new GameEngine(_config, new SequenceRandom(stops)).PlayBase(5, TensionState.Rest);
+        var one = new GameEngine(_config, new SequenceRandom(stops)).PlayBase(1m, TensionState.Rest);
+        var five = new GameEngine(_config, new SequenceRandom(stops)).PlayBase(5m, TensionState.Rest);
         Assert.Equal(one.Spin.Stops, five.Spin.Stops);
-        Assert.Equal(one.Spin.Award * 5, five.Spin.Award, 10);
+        Assert.Equal(one.Spin.Award * 5, five.Spin.Award);
     }
 
     private static uint[] StopsWithScatterCount(ReelSet set, int target)

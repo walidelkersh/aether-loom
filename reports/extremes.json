@@ -49,6 +49,11 @@
       "MaximumAtLeastThreeScatters": 36
     }
   },
+  "ReachableBaseStates": [
+    "Rest",
+    "Taut",
+    "Overdrive"
+  ],
   "MaximumFeatureAwards": {
     "Rest": 10921.225,
     "Taut": 11132.625,

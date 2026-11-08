@@ -30,15 +30,19 @@ public partial class Game : IAsyncDisposable
     private SymbolId[,] _grid;
     private SpinResult? _currentSpin;
     private BaseSpinResult? _currentBase;
-    private TensionState _state;
+    // Persistent tension is owned per bet level and cleared on reset, so state built at a small bet can never be
+    // spent at a large one (the v1.0 bet-switching exploit, 152% wager-weighted return; see docs/advantage-play.md).
+    private readonly StateLedger _ledger = new(StatePolicy.PerBetLevel);
+    private TensionState _state => _ledger.StateFor(_bet);
     private TensionState _displayStage;
-    private double _balance = 1000;
-    private double _bet = 1;
-    private double _lastAward;
-    private double _featureAward;
+    // Credits are decimal: 0.07 x 3 ways x 0.20 must settle to exactly 0.042.
+    private decimal _balance = 1000m;
+    private decimal _bet = 1m;
+    private decimal _lastAward;
+    private decimal _featureAward;
     private long _sessionSpins;
-    private double _sessionWager;
-    private double _sessionPayout;
+    private decimal _sessionWager;
+    private decimal _sessionPayout;
     private readonly Queue<RoundReceipt> _history = new();
     private string _message = "Two Sparks tighten the loom. Three start the feature.";
     private string? _featureBanner;
@@ -126,7 +130,7 @@ public partial class Game : IAsyncDisposable
                 ? $"{cycle.BaseSpin.Spin.ScatterCount} Sparks · Weave Ascending"
                 : DescribeTransition(cycle.BaseSpin);
             if (cycle.BaseAward > 0) await Cue("win");
-            _state = cycle.BaseSpin.StateAfter;
+            _ledger.Record(bet, cycle.BaseSpin.StateAfter);
             if (cycle.Bonus is not null) await PresentBonus(cycle.Bonus);
             else
             {
@@ -234,16 +238,20 @@ public partial class Game : IAsyncDisposable
     {
         if (_spinning) return;
         _bet = _configuration.Bets[Math.Min(_configuration.Bets.Count - 1, _configuration.Bets.ToList().IndexOf(_bet) + 1)];
+        _displayStage = _state;
     }
     private void DecreaseBet()
     {
         if (_spinning) return;
         _bet = _configuration.Bets[Math.Max(0, _configuration.Bets.ToList().IndexOf(_bet) - 1)];
+        _displayStage = _state;
     }
     private void ResetCredits()
     {
         if (_spinning) return;
-        _balance = 1000;
+        _balance = 1000m;
+        _ledger.Clear();
+        _displayStage = TensionState.Rest;
         _sessionSpins = 0;
         _sessionWager = _sessionPayout = 0;
         _history.Clear();
@@ -261,7 +269,7 @@ public partial class Game : IAsyncDisposable
         : $"{spin.StateBefore} → {spin.StateAfter} · next paid spin";
     private static string ArtClass(SymbolId symbol) => symbol.ToString().ToLowerInvariant();
     private static string SymbolName(SymbolId symbol) => symbol.ToString().ToUpperInvariant();
-    private sealed record RoundReceipt(long Number, double Bet, double Base, double Feature, TensionState Before, TensionState After);
+    private sealed record RoundReceipt(long Number, decimal Bet, decimal Base, decimal Feature, TensionState Before, TensionState After);
 
     public async ValueTask DisposeAsync()
     {

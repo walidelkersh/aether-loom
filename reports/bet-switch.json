@@ -1,0 +1,20 @@
+{
+  "theoreticalSharedStateReturn": 1.5223420706626867,
+  "constantWagerRtp": 0.9656691483346369,
+  "simulations": [
+    {
+      "Policy": "SharedAcrossBets",
+      "PaidSpins": 5000000,
+      "Wagered": 4327217.6,
+      "Paid": 6640863.101,
+      "Return": 1.5346727885835922
+    },
+    {
+      "Policy": "PerBetLevel",
+      "PaidSpins": 5000000,
+      "Wagered": 1000000,
+      "Paid": 967443.377,
+      "Return": 0.967443377
+    }
+  ]
+}

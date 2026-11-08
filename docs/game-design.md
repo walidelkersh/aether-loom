@@ -53,18 +53,20 @@ The final paytable and strip counts may be tuned before version 1.0. Any tuning 
 
 Every reel is a circular ordered strip. A uniformly selected stop is the top visible symbol; the next two strip positions form the middle and bottom symbols. Base states and feature stages use separate five-reel sets of equal-length strips so state changes are auditable.
 
-Planned reel sets:
+Reel sets (the pre-implementation draft specified 48 stops per reel; the implemented and analysed configuration uses **40**):
 
 | Set | Use | Length per reel | Constraint |
 |---|---|---:|---|
-| BASE_REST | Base state 0 | 48 | One Spark per reel; no Wild on reel 1 |
-| BASE_TAUT | Base state 1 | 48 | One or two Sparks per reel; no Wild on reel 1 |
-| BASE_OVERDRIVE | Base state 2 | 48 | Two Sparks per reel; increased Wilds on reels 2–5 |
-| BONUS_REST | Feature stage 0 | 48 | Increased Wilds; no Wild on reel 1 |
-| BONUS_TAUT | Feature stage 1 | 48 | Further increased Wilds; no Wild on reel 1 |
-| BONUS_OVERDRIVE | Feature stage 2 | 48 | Highest Wild density; no Wild on reel 1 |
+| BASE_REST | Base state 0 | 40 | One Spark per reel; no Wild on reel 1 |
+| BASE_TAUT | Base state 1 | 40 | One or two Sparks per reel; no Wild on reel 1 |
+| BASE_OVERDRIVE | Base state 2 | 40 | Two Sparks per reel; increased Wilds on reels 2–5 |
+| BONUS_REST | Feature stage 0 | 40 | Increased Wilds; no Wild on reel 1 |
+| BONUS_TAUT | Feature stage 1 | 40 | Further increased Wilds; no Wild on reel 1 |
+| BONUS_OVERDRIVE | Feature stage 2 | 40 | Highest Wild density; no Wild on reel 1 |
 
-Spark positions must be separated by at least three strip indices, including across the circular boundary, so one reel cannot show two Sparks in the same 3-row window. Wilds are also spaced to avoid unintended stacked-wild windows. The exact ordered strips and symbol-count tables will live in `config/reel-strips.json` and be reproduced in the generated PAR sheet.
+Spark positions must be separated by at least three strip indices, including across the circular boundary, so one reel cannot show two Sparks in the same 3-row window. Wilds are also spaced to avoid unintended stacked-wild windows. The exact ordered strips live in `config/game-config.json` and are reproduced in [reel-strips.md](reel-strips.md) and the PAR sheet.
+
+**Shared strips.** BASE_OVERDRIVE and BONUS_REST use identical ordered strips, so the game has six named reel sets but five distinct physical configurations. All three bonus sets also have the same Spark distribution, which is why expected feature duration (8.370532 spins) does not depend on the starting stage. `GameConfiguration.SharedStripGroups()` reports this and a test pins it.
 
 ## Persistent Tension mechanic
 
@@ -90,6 +92,7 @@ This creates a three-state Markov chain whose transition matrix is calculated fr
 - Escalation: two or more Sparks on a feature spin advance the stage by one, to a maximum of stage 2, and award one additional free spin.
 - Bound: at most 12 feature spins are played, including awarded spins.
 - Feature Sparks do not pay cash directly.
+- State scope (added in v1.1): tension is stored **per bet level** and is cleared when the session ends. A state earned at one bet cannot be spent at another, and a saved state is never left on the machine for the next player. See [advantage-play.md](advantage-play.md) for why v1.0's single shared state was exploitable.
 - There is no separate arbitrary win cap in the demonstration model. The finite strips, paytable, seven initial spins, and 12-spin feature bound produce an exact maximum game-cycle award of 11,227.60× bet in version 1.0. The `ExtremeAnalyzer` derives this value from reachable window profiles and bonus transitions.
 
 The bonus is evaluated as a finite Markov reward process. Exact per-stage transition probabilities and conditional expected awards feed a dynamic program indexed by stage, spins remaining, and spins already played. Simulation independently exercises the state loop.
@@ -125,11 +128,12 @@ Planned exact calculations:
 - finite-state expected feature value and expected duration;
 - maximum award implied by the paytable, ways rules, multipliers, and cap.
 
+- (v1.1) full single-spin award distribution of every reel set by enumerating all 40^5 stop combinations, which makes hit frequency, variance, standard deviation, volatility index, the win distribution, and the correlation-corrected long-run variance exact as well.
+
 Planned simulation estimates:
 
-- total and component RTP as an independent implementation check;
-- hit frequency;
-- payout variance, standard deviation, and volatility index;
+- total and component RTP as an implementation check against the exact model;
+- hit frequency and variance (cross-checked against the exact values);
 - empirical feature frequency and duration;
 - observed maximum win;
 - RTP confidence interval;

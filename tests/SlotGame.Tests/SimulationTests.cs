@@ -41,6 +41,6 @@ public sealed class SimulationTests
         var observed = new SimulationRunner(config).Run(250_000, 20260908);
         Assert.InRange(Math.Abs(observed.ObservedRtp - exact.TotalRtp), 0, 0.04);
         Assert.InRange(Math.Abs(observed.FeatureFrequency - exact.FeatureTriggerProbability), 0, 0.0005);
-        Assert.InRange(exact.TotalRtp, observed.ObservedRtp - 3 * observed.RtpConfidenceHalfWidth95, observed.ObservedRtp + 3 * observed.RtpConfidenceHalfWidth95);
+        Assert.InRange(exact.TotalRtp, observed.ObservedRtp - 3 * observed.RtpConfidenceHalfWidth95BatchMeans, observed.ObservedRtp + 3 * observed.RtpConfidenceHalfWidth95BatchMeans);
     }
 }

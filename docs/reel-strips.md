@@ -1,7 +1,10 @@
-
 # Ordered reel strips
 
-Every string is a circular 40-stop strip. The selected stop is the top symbol and the following two positions are the middle and bottom symbols. Codes map to: A Crown, B Moth, C Shuttle, D Dye, E Linen, F Knot, W Wild, X Spark. Wild and Spark occurrences have at least two intervening stops, including across the circular boundary, so a visible reel window contains at most one of each special symbol. Reel 1 contains no Wild.
+Every string is a circular 40-stop strip. The selected stop is the top symbol; the next two positions are the middle
+and bottom. Codes: A Crown, B Moth, C Shuttle, D Dye, E Linen, F Knot, W Wild, X Spark. Wild and Spark are separated by
+at least three circular positions, so a visible window holds at most one of each. Reel 1 has no Wild.
+
+Six named sets, five distinct strip configurations: **BASE_OVERDRIVE = BONUS_REST** share identical strips.
 
 ## BASE_REST
 

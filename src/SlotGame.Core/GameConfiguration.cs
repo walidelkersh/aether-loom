@@ -4,12 +4,35 @@ namespace SlotGame.Core;
 
 public sealed class Paytable
 {
-    private readonly IReadOnlyDictionary<SymbolId, IReadOnlyDictionary<int, double>> _pays;
-    public Paytable(IReadOnlyDictionary<SymbolId, IReadOnlyDictionary<int, double>> pays) => _pays = pays;
-    public IReadOnlyCollection<SymbolId> PayingSymbols => _pays.Keys.ToArray();
-    public double Get(SymbolId symbol, int reels) =>
-        _pays.TryGetValue(symbol, out var counts) && counts.TryGetValue(reels, out var pay) ? pay : 0;
-    public IReadOnlyDictionary<int, double> For(SymbolId symbol) => _pays[symbol];
+    private readonly IReadOnlyDictionary<SymbolId, IReadOnlyDictionary<int, decimal>> _pays;
+    private readonly SymbolId[] _symbols;
+    public Paytable(IReadOnlyDictionary<SymbolId, IReadOnlyDictionary<int, decimal>> pays)
+    {
+        _pays = pays;
+        _symbols = pays.Keys.ToArray();
+    }
+
+    public IReadOnlyCollection<SymbolId> PayingSymbols => _symbols;
+
+    /// <summary>Exact pay (x total bet, per way) as configured. Use for settlement and rational analysis.</summary>
+    public decimal GetExact(SymbolId symbol, int reels) =>
+        _pays.TryGetValue(symbol, out var counts) && counts.TryGetValue(reels, out var pay) ? pay : 0m;
+
+    /// <summary>Binary floating-point pay for fast statistical analysis.</summary>
+    public double Get(SymbolId symbol, int reels) => (double)GetExact(symbol, reels);
+    public IReadOnlyDictionary<int, decimal> For(SymbolId symbol) => _pays[symbol];
+
+    /// <summary>Smallest power of ten that turns every pay into an integer (100 for two-decimal pays).</summary>
+    public long IntegerScale
+    {
+        get
+        {
+            long scale = 1;
+            foreach (var pay in _pays.Values.SelectMany(x => x.Values))
+                while (decimal.Truncate(pay * scale) != pay * scale) scale *= 10;
+            return scale;
+        }
+    }
 }
 
 public sealed class GameConfiguration
@@ -29,17 +52,18 @@ public sealed class GameConfiguration
     public required int ReelCount { get; init; }
     public required int InitialFreeSpins { get; init; }
     public required int MaximumFeatureSpins { get; init; }
-    public required IReadOnlyList<double> StageMultipliers { get; init; }
-    public required IReadOnlyList<double> Bets { get; init; }
+    public required IReadOnlyList<decimal> StageMultipliers { get; init; }
+    public required IReadOnlyList<decimal> Bets { get; init; }
     public required Paytable Paytable { get; init; }
     public required IReadOnlyDictionary<string, ReelSet> ReelSets { get; init; }
 
     public ReelSet BaseReelSet(TensionState state) => ReelSets[$"BASE_{StateName(state)}"];
     public ReelSet BonusReelSet(TensionState state) => ReelSets[$"BONUS_{StateName(state)}"];
-    public double StageMultiplier(TensionState state) => StageMultipliers[(int)state];
+    public double StageMultiplier(TensionState state) => (double)StageMultipliers[(int)state];
+    public decimal StageMultiplierExact(TensionState state) => StageMultipliers[(int)state];
 
     public GameConfiguration With(
-        IReadOnlyList<double>? stageMultipliers = null,
+        IReadOnlyList<decimal>? stageMultipliers = null,
         int? initialFreeSpins = null,
         int? maximumFeatureSpins = null,
         IReadOnlyDictionary<string, ReelSet>? reelSets = null)
@@ -73,11 +97,11 @@ public sealed class GameConfiguration
         var codeMap = root.GetProperty("symbolCodes").EnumerateObject()
             .ToDictionary(item => item.Name[0], item => ParseSymbol(item.Value.GetString()!));
 
-        var pays = new Dictionary<SymbolId, IReadOnlyDictionary<int, double>>();
+        var pays = new Dictionary<SymbolId, IReadOnlyDictionary<int, decimal>>();
         foreach (var symbol in root.GetProperty("paytable").EnumerateObject())
         {
             pays[ParseSymbol(symbol.Name)] = symbol.Value.EnumerateObject()
-                .ToDictionary(item => int.Parse(item.Name), item => item.Value.GetDouble());
+                .ToDictionary(item => int.Parse(item.Name), item => item.Value.GetDecimal());
         }
 
         var sets = new Dictionary<string, ReelSet>(StringComparer.Ordinal);
@@ -97,8 +121,8 @@ public sealed class GameConfiguration
             ReelCount = root.GetProperty("reels").GetInt32(),
             InitialFreeSpins = root.GetProperty("initialFreeSpins").GetInt32(),
             MaximumFeatureSpins = root.GetProperty("maximumFeatureSpins").GetInt32(),
-            StageMultipliers = root.GetProperty("stageMultipliers").EnumerateArray().Select(x => x.GetDouble()).ToArray(),
-            Bets = root.GetProperty("bets").EnumerateArray().Select(x => x.GetDouble()).ToArray(),
+            StageMultipliers = root.GetProperty("stageMultipliers").EnumerateArray().Select(x => x.GetDecimal()).ToArray(),
+            Bets = root.GetProperty("bets").EnumerateArray().Select(x => x.GetDecimal()).ToArray(),
             Paytable = new Paytable(pays),
             ReelSets = sets
         };
@@ -130,7 +154,21 @@ public sealed class GameConfiguration
 
         if (Paytable.PayingSymbols.Any(symbol => symbol is SymbolId.Wild or SymbolId.Spark))
             throw new InvalidOperationException("Wild and Spark cannot have direct pays.");
+        if (StageMultipliers.Any(m => m <= 0) || Bets.Count == 0 || Bets.Any(b => b <= 0))
+            throw new InvalidOperationException("Stage multipliers and bets must be positive.");
+        if (InitialFreeSpins <= 0 || MaximumFeatureSpins < InitialFreeSpins)
+            throw new InvalidOperationException("Feature spin limits are inconsistent.");
     }
+
+    /// <summary>
+    /// Reel sets whose ordered strips are identical. BASE_OVERDRIVE and BONUS_REST intentionally share strips,
+    /// so the game has six named sets but five distinct physical configurations.
+    /// </summary>
+    public IReadOnlyList<IReadOnlyList<string>> SharedStripGroups() => ReelSets.Values
+        .GroupBy(set => string.Join("|", set.Reels.Select(reel => string.Concat(reel.Stops.Select(s => (char)('A' + (int)s))))))
+        .Where(group => group.Count() > 1)
+        .Select(group => (IReadOnlyList<string>)group.Select(set => set.Name).ToArray())
+        .ToArray();
 
     private static void ValidateSpacing(ReelStrip reel, SymbolId symbol, string setName)
     {

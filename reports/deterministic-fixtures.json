@@ -34,7 +34,7 @@
       ]
     ],
     "ScatterCount": 1,
-    "award": 0.4,
+    "award": 0.40,
     "stateAfter": "Rest",
     "FeatureTriggered": false
   },
@@ -112,7 +112,7 @@
       ]
     ],
     "ScatterCount": 0,
-    "award": 7.6,
+    "award": 7.60,
     "stateAfter": "Rest",
     "FeatureTriggered": false
   },
@@ -151,7 +151,7 @@
       ]
     ],
     "ScatterCount": 0,
-    "award": 0.8,
+    "award": 0.80,
     "stateAfter": "Rest",
     "FeatureTriggered": false
   },
@@ -190,7 +190,7 @@
       ]
     ],
     "ScatterCount": 0,
-    "award": 4.1,
+    "award": 4.10,
     "stateAfter": "Rest",
     "FeatureTriggered": false
   },
@@ -307,7 +307,7 @@
       ]
     ],
     "ScatterCount": 1,
-    "award": 6.3,
+    "award": 6.30,
     "stateAfter": "Taut",
     "FeatureTriggered": false
   },
@@ -346,7 +346,7 @@
       ]
     ],
     "ScatterCount": 0,
-    "award": 1.7999999999999998,
+    "award": 1.80,
     "stateAfter": "Rest",
     "FeatureTriggered": false
   }

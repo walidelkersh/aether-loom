@@ -22,7 +22,24 @@ public sealed record TheoreticalMathReport(
     double FeatureRtp,
     double TotalRtp,
     double FeatureTriggerProbability,
-    double BaseHitProbability);
+    double BaseHitProbability,
+    IReadOnlyList<double> ConditionalStateRtp)
+{
+    /// <summary>
+    /// Return per unit wagered when the player bets b[s] in state s. Equals TotalRtp only for a constant bet;
+    /// with a shared state this is the bet-switching exploit measure: sum(pi b r) / sum(pi b).
+    /// </summary>
+    public double WagerWeightedReturn(IReadOnlyList<double> betByState)
+    {
+        double paid = 0, wagered = 0;
+        for (var s = 0; s < 3; s++)
+        {
+            paid += StationaryStateProbabilities[s] * betByState[s] * ConditionalStateRtp[s];
+            wagered += StationaryStateProbabilities[s] * betByState[s];
+        }
+        return paid / wagered;
+    }
+}
 
 public sealed class ExactAnalyzer
 {
@@ -34,7 +51,7 @@ public sealed class ExactAnalyzer
     {
         var reelMath = _configuration.ReelSets.Values.ToDictionary(set => set.Name, AnalyzeReelSet);
         var transition = BuildTransitionMatrix(reelMath);
-        var stationary = StationaryDistribution(transition);
+        var stationary = MarkovMath.StationaryDistribution(transition);
         var features = Enum.GetValues<TensionState>()
             .Select(stage => AnalyzeFeature(stage, reelMath)).ToArray();
 
@@ -42,6 +59,7 @@ public sealed class ExactAnalyzer
         var featureRtp = 0.0;
         var triggerProbability = 0.0;
         var baseHitProbability = 0.0;
+        var conditional = new double[3];
         foreach (var state in Enum.GetValues<TensionState>())
         {
             var stateWeight = stationary[(int)state];
@@ -50,11 +68,12 @@ public sealed class ExactAnalyzer
             baseHitProbability += stateWeight * math.BaseHitProbability;
             triggerProbability += stateWeight * math.FeatureTriggerProbability;
             featureRtp += stateWeight * math.FeatureTriggerProbability * features[(int)state].ExpectedAward;
+            conditional[(int)state] = math.ExpectedWaysAward + math.FeatureTriggerProbability * features[(int)state].ExpectedAward;
         }
 
         return new TheoreticalMathReport(
             reelMath, stationary, transition, features, baseRtp, featureRtp,
-            baseRtp + featureRtp, triggerProbability, baseHitProbability);
+            baseRtp + featureRtp, triggerProbability, baseHitProbability, conditional);
     }
 
     public ReelSetMath AnalyzeReelSet(ReelSet set)
@@ -154,7 +173,7 @@ public sealed class ExactAnalyzer
         return total;
     }
 
-    private double[,] BuildTransitionMatrix(IReadOnlyDictionary<string, ReelSetMath> reelMath)
+    public double[,] BuildTransitionMatrix(IReadOnlyDictionary<string, ReelSetMath> reelMath)
     {
         var matrix = new double[3, 3];
         foreach (var state in Enum.GetValues<TensionState>())
@@ -167,25 +186,6 @@ public sealed class ExactAnalyzer
             }
         }
         return matrix;
-    }
-
-    private static double[] StationaryDistribution(double[,] matrix)
-    {
-        var current = new[] { 1.0, 0.0, 0.0 };
-        for (var iteration = 0; iteration < 100_000; iteration++)
-        {
-            var next = new double[3];
-            for (var from = 0; from < 3; from++)
-            for (var to = 0; to < 3; to++)
-                next[to] += current[from] * matrix[from, to];
-
-            var total = next.Sum();
-            for (var state = 0; state < next.Length; state++) next[state] /= total;
-            if (next.Zip(current).Max(pair => Math.Abs(pair.First - pair.Second)) < 1e-13)
-                return next;
-            current = next;
-        }
-        throw new InvalidOperationException("Base-state stationary distribution did not converge.");
     }
 
     private FeatureMath AnalyzeFeature(TensionState startingStage, IReadOnlyDictionary<string, ReelSetMath> reelMath)

@@ -14,7 +14,7 @@ public sealed class GameEngine
         _random = random;
     }
 
-    public GameCycleResult Play(double bet, TensionState state)
+    public GameCycleResult Play(decimal bet, TensionState state)
     {
         ValidateBet(bet);
         var baseSpin = PlayBase(bet, state);
@@ -22,15 +22,15 @@ public sealed class GameEngine
         return new GameCycleResult(baseSpin, bonus);
     }
 
-    public BaseSpinResult PlayBase(double bet, TensionState state)
+    public BaseSpinResult PlayBase(decimal bet, TensionState state)
     {
         ValidateBet(bet);
-        var spin = Spin(_configuration.BaseReelSet(state), bet, 1.0);
+        var spin = Spin(_configuration.BaseReelSet(state), bet, 1m);
         var triggered = spin.ScatterCount >= 3;
         return new BaseSpinResult(spin, state, NextBaseState(state, spin.ScatterCount), triggered);
     }
 
-    public BonusResult PlayBonus(double bet, TensionState startingStage)
+    public BonusResult PlayBonus(decimal bet, TensionState startingStage)
     {
         ValidateBet(bet);
         var stage = startingStage;
@@ -43,7 +43,7 @@ public sealed class GameEngine
             remaining--;
             played++;
             var stageBefore = stage;
-            var spin = Spin(_configuration.BonusReelSet(stage), bet, _configuration.StageMultiplier(stage));
+            var spin = Spin(_configuration.BonusReelSet(stage), bet, _configuration.StageMultiplierExact(stage));
             var awarded = spin.ScatterCount >= 2 && played < _configuration.MaximumFeatureSpins;
             if (awarded)
             {
@@ -72,7 +72,7 @@ public sealed class GameEngine
         };
     }
 
-    private SpinResult Spin(ReelSet set, double bet, double multiplier)
+    private SpinResult Spin(ReelSet set, decimal bet, decimal multiplier)
     {
         var stops = new int[5];
         var grid = new SymbolId[3, 5];
@@ -90,7 +90,7 @@ public sealed class GameEngine
         return new SpinResult(set.Name, stops, grid, _evaluator.Evaluate(grid), scatterCount, bet, multiplier);
     }
 
-    private void ValidateBet(double bet)
+    private void ValidateBet(decimal bet)
     {
         if (bet <= 0 || !_configuration.Bets.Contains(bet))
             throw new ArgumentOutOfRangeException(nameof(bet), $"Bet must be one of: {string.Join(", ", _configuration.Bets)}");

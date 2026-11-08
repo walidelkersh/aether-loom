@@ -20,7 +20,7 @@ The bonus is a finite Markov reward process. Its state contains the tension stag
 
 ## The reel design
 
-The model uses six named reel sets with five circular 40-stop strips each. A stop determines the top symbol and the following two entries determine the rest of the window. Wild and Spark symbols have at least two intervening positions, including around the circular boundary, so neither can stack in a three-row window. Reel 1 has no Wild, which removes all-Wild ambiguity in the ways evaluator.
+The model uses six named reel sets (five distinct strip configurations, because BASE_OVERDRIVE and BONUS_REST share strips) with five circular 40-stop strips each. A stop determines the top symbol and the following two entries determine the rest of the window. Wild and Spark symbols have at least two intervening positions, including around the circular boundary, so neither can stack in a three-row window. Reel 1 has no Wild, which removes all-Wild ambiguity in the ways evaluator.
 
 I stored the strips as compact ordered strings in the canonical JSON rather than only as symbol counts. That makes both distribution and adjacency available for review.
 
@@ -44,15 +44,15 @@ The exact feature rate is 0.420624%, or 1 in 237.74 paid spins. That rate is mos
 
 ## Simulation
 
-The final Monte Carlo run used 10,000,000 paid spins and PCG32 seed 20260908. It produced 96.638977% RTP with a ±0.240199 percentage-point normal 95% confidence interval. The exact result lies inside the interval.
+The final Monte Carlo run used 10,000,000 paid spins and PCG32 seed 20260908. It produced 96.638977% RTP. Because the tension state links consecutive spins, I report three 95% intervals: the textbook i.i.d. interval (±0.2402 pp), a batch-means interval (±0.2582 pp), and one from the exact long-run variance of the Markov model (±0.2387 pp). The exact RTP is 0.59 correlation-corrected standard errors from the simulated value, and a chi-square test of the simulated base win distribution against the exact enumerated distribution gives p = 0.46.
 
-The observed standard deviation was 3.875392× bet, variance was 15.018659 bet², overall hit frequency was 65.109340%, and the largest observed cycle paid 731.79×. These are simulation estimates and are labeled that way throughout the project.
+The largest observed cycle paid 731.79×. That is an observed value, not the maximum; the reachable maximum is 11,227.60×.
 
 ## Exact verification
 
-I compute exact ways EV from each reel's enumerated visible-window count distribution. Scatter polynomials give exact trigger probabilities. The base hit probability only depends on the first three reels and is enumerated directly. Feature EV and duration come from finite recursion. A second dynamic program over reachable window profiles calculates the exact 11,227.60× maximum game cycle.
+I compute exact ways EV from each reel's enumerated visible-window count distribution. Scatter polynomials give exact trigger probabilities. Feature EV and duration come from finite recursion. A second dynamic program over reachable window profiles calculates the exact 11,227.60× maximum game cycle.
 
-The 10-million-spin run differed from exact total RTP by +0.072062 percentage points, base hit probability by +0.017754 points, and feature probability by -0.000024 points. Conditional feature award differed by +0.011775× bet.
+Version 1.1 adds two more exact derivations. A rational analyzer repeats the RTP in BigInteger fractions using the closed form for ways EV, and a full enumeration of all 40⁵ stop combinations per reel set makes variance (14.912377 bet², SD 3.861655×), hit frequency (65.0918%), the volatility index (6.35 at 90%) and the win distribution exact rather than simulated. A Python script written from the rules, sharing no code with the C# core, reproduces the identical RTP fraction, and CI fails if it ever disagrees.
 
 ## Sensitivity analysis
 
@@ -66,10 +66,18 @@ These experiments make the controls explicit. Wild density primarily changes fea
 
 Analysis mode exposes the resolved reel set, state before and after, visible Sparks, active multiplier, stop indices, current payout, exact RTP budget, and feature probability. It never displays future outcomes.
 
+## Version 1.1: what a review found and what I changed
+
+A review of version 1.0 found problems that the RTP number alone did not show. I treated them as the most useful part of the project.
+
+1. **Bet switching.** The three states have conditional returns of 91.29%, 153.09% and 372.09%, and v1.0 kept one state for the whole session while allowing bet changes. Building tension at 0.20 and spending it at 10.00 returns 152.23% of money wagered. I moved state into a `StateLedger` owned per bet level and cleared on cash-out, which restores the constant-bet RTP for any betting strategy. An adversarial simulation drops from 153.5% to 96.7%. Details in [advantage-play.md](advantage-play.md).
+2. **Maximum-exposure analyzer combined impossible events.** In a reduced-Spark test configuration the feature cannot trigger, but v1.0 still reported an 11,227× maximum because an empty "3+ Sparks" category returned 0 instead of "impossible" and every base state was assumed reachable. The analyzer now propagates impossibility and checks reachability; the correct maximum there is 49.60×.
+3. **Tests checked consistency, not correctness.** The RTP test passed for anything from 94% to 97%. Tests now pin 12-digit values from the independent Python reference, compare three exact methods, and include hand-calculated ways fixtures.
+4. **Money in `double`.** Credits now settle in `decimal`, so 0.07 × 3 ways × 0.20 is exactly 0.042. The 10M-spin run reproduces v1.0's result to the last digit, which confirms the change did not alter game behaviour.
+5. **Documentation drift.** The design spec said 48-stop reels (the build uses 40), and the docs did not mention that BASE_OVERDRIVE and BONUS_REST share strips. Both are now stated and the shared strips are detected in code.
+
 ## What I would change next
 
-The exact analyzer currently calculates complete-cycle hit frequency only through simulation because a feature can trigger without producing a cash win. I would extend the feature recursion with a zero-award probability state to calculate that quantity exactly.
+For a production-oriented client, I would move outcome resolution to a server with an event log and recovery, replace PCG32 with a certified RNG, and add an event-book layer between the math result and presentation.
 
-For a production-oriented client, I would add an explicit event-book layer between the math result and presentation. That would make animation replay and remote game-server integration cleaner while preserving `SlotGame.Core` as the independently testable specification.
-
-The Stake Engine adapter currently exports the exact strips and validates nine deterministic stop fixtures. Completing a current-SDK `GameState` for persistent paid-round state would be the next integration step; I have not represented that partial adapter as production compatible.
+The Stake Engine adapter exports the exact strips and validates nine deterministic stop fixtures. Completing a current-SDK `GameState` for persistent paid-round state, keyed per bet level, would be the next integration step; I have not represented that partial adapter as production compatible.

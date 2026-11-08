@@ -26,7 +26,7 @@ public sealed class WaysWinEvaluator
                 ways *= matches;
             }
 
-            var multiplier = _paytable.Get(symbol, matchedReels);
+            var multiplier = _paytable.GetExact(symbol, matchedReels);
             if (multiplier > 0)
                 wins.Add(new SymbolWin(symbol, matchedReels, ways, multiplier));
         }

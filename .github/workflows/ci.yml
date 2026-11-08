@@ -15,8 +15,12 @@ jobs:
           dotnet-version: 8.0.x
       - name: Build
         run: dotnet build AetherLoom.sln --configuration Release
-      - name: Unit, invariant, and statistical tests
+      - name: Unit, invariant, hand-calculated, and statistical tests
         run: dotnet test AetherLoom.sln --configuration Release --no-build
+      - name: Exact PAR analysis (rational RTP + full 40^5 enumeration)
+        run: dotnet run --project src/SlotGame.Simulation --configuration Release --no-build -- --par --output /tmp/par-sheet.json
+      - name: Independent Python reference must match C# exactly
+        run: python scripts/independent_check.py --report /tmp/par-sheet.json
       - name: Stake representation parity
         run: python integrations/stake-engine/parity_check.py
 

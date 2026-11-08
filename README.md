@@ -43,8 +43,8 @@ shared code. CI fails if it disagrees with the C# result.
   player who bets 0.20 in Rest and 10 otherwise gets 152% back. State is now kept per bet level and cleared on
   cash-out. [advantage-play.md](docs/advantage-play.md) has the numbers and a simulation of both versions.
 - **Max win.** The first max-win analyzer treated "no outcome with 3+ Sparks" as a zero award instead of
-  impossible, so a test configuration where the feature could never trigger still reported 11,227x. It now
-  checks reachability; the real figure there is 49.60x.
+  impossible. In a reduced-Spark test configuration, where the feature can never trigger, it reported 11,227.15x
+  instead of the true 49.60x. It now checks reachability. The real game's 11,227.60x was never affected.
 - **Correlated spins.** The correlation turned out to lower long-run variance slightly (-0.54%), because
   zero-Spark spins pay the most in the base game and also push tension down.
 

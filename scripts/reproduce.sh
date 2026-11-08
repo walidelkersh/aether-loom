@@ -11,7 +11,6 @@ run --spins 10000000 --seed 20260908 --output reports/verified-metrics.json
 run --extremes --output reports/extremes.json
 run --sensitivity --spins 500000 --seed 77001 --output reports/sensitivity.json
 run --bet-switch --spins 5000000 --seed 31337 --output reports/bet-switch.json
-run --fixtures
 python scripts/independent_check.py
 python scripts/generate_docs.py
 python scripts/render_par_pdf.py

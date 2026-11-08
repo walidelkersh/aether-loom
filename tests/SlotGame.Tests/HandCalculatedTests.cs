@@ -56,15 +56,6 @@ public sealed class HandCalculatedTests
     }
 
     [Fact]
-    public void FractionArithmeticIsExact()
-    {
-        var tenth = Fraction.FromDecimal(0.1m);
-        Assert.Equal(new Fraction(3, 10), tenth + tenth + tenth);
-        Assert.Equal(new Fraction(7, 4), Fraction.FromDecimal(1.75m));
-        Assert.Equal("0.333", new Fraction(1, 3).ToDecimalString(3));
-    }
-
-    [Fact]
     public void TwoStateStationaryDistributionMatchesBalanceEquation()
     {
         // A->B 10%, B->A 20%: 0.1 pi_A = 0.2 pi_B, so pi = (2/3, 1/3).

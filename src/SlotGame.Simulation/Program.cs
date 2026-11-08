@@ -25,28 +25,6 @@ void Save(object payload)
 
 switch (options.Mode)
 {
-    case Mode.Fixtures:
-    {
-        var fixtures = from seed in new ulong[] { 1, 42, 20260908 }
-                       from state in Enum.GetValues<TensionState>()
-                       let spin = new GameEngine(configuration, new Pcg32Random(seed)).PlayBase(1m, state)
-                       select new
-                       {
-                           seed,
-                           state = state.ToString(),
-                           spin.Spin.ReelSet,
-                           spin.Spin.Stops,
-                           grid = Enumerable.Range(0, 3).Select(row => Enumerable.Range(0, 5).Select(reel => spin.Spin.Grid[row, reel].ToString()).ToArray()).ToArray(),
-                           spin.Spin.ScatterCount,
-                           award = spin.Spin.Award,
-                           stateAfter = spin.StateAfter.ToString(),
-                           spin.FeatureTriggered
-                       };
-        options = options with { Output = options.Output ?? "reports/deterministic-fixtures.json" };
-        Save(fixtures.ToArray());
-        return;
-    }
-
     case Mode.Extremes:
     {
         var extremes = new ExtremeAnalyzer(configuration).Analyze();
@@ -75,10 +53,9 @@ switch (options.Mode)
         Console.WriteLine("Enumerating 40^5 stop combinations for each distinct reel set...");
         var par = new ParAnalyzer(configuration);
         var stats = par.Analyze();
-        var rational = new RationalAnalyzer(configuration).Analyze();
         var extremes = new ExtremeAnalyzer(configuration).Analyze();
         Console.WriteLine($"Done in {timer.Elapsed.TotalSeconds:N1} s.");
-        Console.WriteLine($"Exact RTP (rational):     {rational.TotalRtp.ToDecimalString(15)}");
+        Console.WriteLine($"Exact RTP (analyzer):     {theory.TotalRtp:F15}");
         Console.WriteLine($"Exact RTP (enumeration):  {stats.Rtp:F15}");
         Console.WriteLine($"Variance / SD:            {stats.Variance:F6} / {stats.StandardDeviation:F6}x bet");
         Console.WriteLine($"Volatility index (90%):   {stats.VolatilityIndex90:F4}");
@@ -97,18 +74,6 @@ switch (options.Mode)
             configuration.Version,
             configuration.GameName,
             sharedStripGroups = configuration.SharedStripGroups(),
-            rational = new
-            {
-                totalRtp = rational.TotalRtp.ToString(),
-                baseRtp = rational.BaseRtp.ToString(),
-                featureRtp = rational.FeatureRtp.ToString(),
-                featureTriggerProbability = rational.FeatureTriggerProbability.ToString(),
-                stationary = rational.StationaryStateProbabilities.Select(x => x.ToString()).ToArray(),
-                totalRtpDecimal = rational.TotalRtp.ToDecimalString(20),
-                baseRtpDecimal = rational.BaseRtp.ToDecimalString(20),
-                featureRtpDecimal = rational.FeatureRtp.ToDecimalString(20),
-                denominatorDigits = rational.TotalRtp.Denominator.ToString().Length
-            },
             exact = new
             {
                 theory.BaseRtp, theory.FeatureRtp, theory.TotalRtp, theory.FeatureTriggerProbability, theory.BaseHitProbability,
@@ -132,7 +97,6 @@ switch (options.Mode)
                 d.ReelSet,
                 combinations = d.Combinations,
                 expectedAward = d.ExpectedAward,
-                exactExpectedAward = d.ExactExpectedAward.ToString(),
                 expectedAwardSquared = d.ExpectedAwardSquared,
                 hitProbability = d.HitProbability,
                 maximumAward = (double)d.MaximumAwardUnits / d.Scale,
@@ -219,7 +183,7 @@ Save(new
 static double[][] ToJagged(double[,] matrix) => Enumerable.Range(0, matrix.GetLength(0))
     .Select(row => Enumerable.Range(0, matrix.GetLength(1)).Select(column => matrix[row, column]).ToArray()).ToArray();
 
-internal enum Mode { Simulate, TheoryOnly, Sensitivity, Extremes, Fixtures, Par, BetSwitch }
+internal enum Mode { Simulate, TheoryOnly, Sensitivity, Extremes, Par, BetSwitch }
 
 internal sealed record Arguments(Mode Mode, long Spins, ulong Seed, string? Output)
 {
@@ -238,7 +202,6 @@ internal sealed record Arguments(Mode Mode, long Spins, ulong Seed, string? Outp
                 case "--theory-only": mode = Mode.TheoryOnly; break;
                 case "--sensitivity": mode = Mode.Sensitivity; break;
                 case "--extremes": mode = Mode.Extremes; break;
-                case "--fixtures": mode = Mode.Fixtures; break;
                 case "--par": mode = Mode.Par; break;
                 case "--bet-switch": mode = Mode.BetSwitch; break;
                 case "--output": output = args[++i]; break;
@@ -247,11 +210,10 @@ internal sealed record Arguments(Mode Mode, long Spins, ulong Seed, string? Outp
                         Usage: dotnet run --project src/SlotGame.Simulation -c Release -- [mode] [--spins N] [--seed N] [--output PATH]
                           (default)          exact summary + seeded Monte Carlo, three CIs, chi-square distribution test
                           --theory-only      exact summary only
-                          --par              exact PAR statistics: rational RTP, full 40^5 enumeration, variance, VI, sigma_inf
+                          --par              exact PAR statistics: full 40^5 enumeration, variance, VI, sigma_inf
                           --extremes         reachable maximum-exposure analysis
                           --sensitivity      one-at-a-time parameter sweep
                           --bet-switch       adversarial bet-switching player under shared vs per-bet state
-                          --fixtures         deterministic replay fixtures
                         """);
                     Environment.Exit(0);
                     break;

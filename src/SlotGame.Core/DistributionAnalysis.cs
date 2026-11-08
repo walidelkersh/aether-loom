@@ -32,9 +32,6 @@ public sealed class ReelSetDistribution
     public double ExpectedAwardSquared =>
         (double)Enumerable.Range(0, Classes).Aggregate(Int128.Zero, (sum, c) => sum + ClassAwardSquareSum[c]) / Scale / Scale / Combinations;
     public double HitProbability => 1 - (double)ClassZeroCount.Sum() / Combinations;
-    public Fraction ExactExpectedAward => new(
-        (System.Numerics.BigInteger)Enumerable.Range(0, Classes).Aggregate(Int128.Zero, (sum, c) => sum + ClassAwardSum[c]),
-        (System.Numerics.BigInteger)Scale * Combinations);
 
     public static ReelSetDistribution Enumerate(ReelSet set, Paytable paytable)
     {

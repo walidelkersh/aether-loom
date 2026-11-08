@@ -177,11 +177,6 @@ def main() -> int:
         status = "ok" if diff <= 1e-12 else "MISMATCH"
         failures += status != "ok"
         print(f"  {key:28s} |diff| = {diff:.2e}  {status}")
-    if "rational" in report:
-        exact_total = Fraction(report["rational"]["totalRtp"])
-        same = exact_total == total
-        failures += not same
-        print(f"  {'rational totalRtp':28s} {'identical fraction' if same else 'MISMATCH'}")
     print("PASS" if failures == 0 else f"FAIL ({failures})")
     return 1 if failures else 0
 

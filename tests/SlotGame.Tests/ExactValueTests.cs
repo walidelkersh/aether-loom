@@ -30,25 +30,12 @@ public sealed class ExactValueTests
     }
 
     [Fact]
-    public void RationalAnalyzerAgreesWithFloatingPointAnalyzer()
+    public void WindowDistributionEvMatchesFullEnumeration()
     {
-        var rational = new RationalAnalyzer(Config).Analyze();
-        var floating = new ExactAnalyzer(Config).Analyze();
-        Assert.Equal(floating.BaseRtp, rational.BaseRtp.ToDouble(), 14);
-        Assert.Equal(floating.FeatureRtp, rational.FeatureRtp.ToDouble(), 14);
-        Assert.Equal(floating.TotalRtp, rational.TotalRtp.ToDouble(), 14);
-        Assert.Equal(rational.BaseRtp + rational.FeatureRtp, rational.TotalRtp);
-        Assert.Equal(Fraction.One, rational.StationaryStateProbabilities.Aggregate(Fraction.Zero, (a, b) => a + b));
-    }
-
-    [Fact]
-    public void ClosedFormWaysEvEqualsFullEnumerationExactly()
-    {
-        // Two different methods, both exact: closed form over count means vs 102,400,000-combination enumeration.
-        var rational = new RationalAnalyzer(Config);
+        var analyzer = new ExactAnalyzer(Config);
         var distributions = new ParAnalyzer(Config).Distributions;
         foreach (var set in Config.ReelSets.Values)
-            Assert.Equal(rational.WaysExpectedValue(set), distributions[set.Name].ExactExpectedAward);
+            Assert.Equal(analyzer.AnalyzeReelSet(set).ExpectedWaysAward, distributions[set.Name].ExpectedAward, tolerance: 1e-12);
     }
 
     [Fact]

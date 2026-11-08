@@ -134,7 +134,6 @@ switch (options.Mode)
     }
 }
 
-// Default: exact summary + seeded Monte Carlo with exact-vs-simulated distribution test.
 Console.WriteLine($"{configuration.GameName} math model v{configuration.Version}");
 Console.WriteLine($"Exact base RTP:       {theory.BaseRtp:P6}");
 Console.WriteLine($"Exact feature RTP:    {theory.FeatureRtp:P6}");

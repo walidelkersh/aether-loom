@@ -6,7 +6,7 @@ public interface IRandomSource
     int NextInt(int exclusiveMaximum);
 }
 
-/// <summary>Reproducible PCG-XSH-RR generator for simulation and replay. It is not a cryptographic RNG.</summary>
+// PCG-XSH-RR: reproducible for simulation and replay, not a certified RNG.
 public sealed class Pcg32Random : IRandomSource
 {
     private ulong _state;

@@ -2,7 +2,6 @@ using SlotGame.Core;
 
 namespace SlotGame.Tests;
 
-/// <summary>Expected values below are worked by hand from the paytable, not produced by the code under test.</summary>
 public sealed class HandCalculatedTests
 {
     private readonly GameConfiguration _config = GameConfiguration.LoadDefault();

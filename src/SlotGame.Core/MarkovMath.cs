@@ -1,12 +1,8 @@
 namespace SlotGame.Core;
 
-/// <summary>Dense linear algebra for small finite Markov chains (the base game has three states).</summary>
 public static class MarkovMath
 {
-    /// <summary>
-    /// Solves pi P = pi with sum(pi) = 1 directly by Gaussian elimination with partial pivoting:
-    /// one balance equation is replaced by the normalisation row. No iteration, no convergence tolerance.
-    /// </summary>
+    // One balance equation is replaced by sum(pi) = 1; direct solve, no iteration.
     public static double[] StationaryDistribution(double[,] transition)
     {
         var n = transition.GetLength(0);
@@ -21,10 +17,7 @@ public static class MarkovMath
         return Solve(a, b).Select(p => Math.Abs(p) < 1e-12 ? 0 : p).ToArray();
     }
 
-    /// <summary>
-    /// Fundamental matrix Z = (I - P + 1 pi)^-1. For any reward vector r with pi.r = 0 the series
-    /// sum_k P^k r converges to Z r, which gives relative state values and autocovariance sums in closed form.
-    /// </summary>
+    // Z = (I - P + 1 pi)^-1. For pi.r = 0, sum_k P^k r = Z r.
     public static double[,] FundamentalMatrix(double[,] transition, IReadOnlyList<double> stationary)
     {
         var n = transition.GetLength(0);
@@ -89,7 +82,6 @@ public static class MarkovMath
         return inverse;
     }
 
-    /// <summary>Base states reachable from <paramref name="start"/> through transitions with positive probability.</summary>
     public static IReadOnlySet<int> Reachable(double[,] transition, int start)
     {
         var seen = new HashSet<int> { start };

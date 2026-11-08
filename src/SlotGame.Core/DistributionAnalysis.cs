@@ -1,16 +1,10 @@
 namespace SlotGame.Core;
 
-/// <summary>
-/// Exact single-spin award distribution of one reel set, from enumerating all 40^5 = 102,400,000 stop
-/// combinations. Awards are held as integers in units of 1/<see cref="Scale"/> of the bet (all pays have two
-/// decimals, so Scale = 100) and accumulated in 128-bit integers: the moments below carry no rounding error.
-/// Results are split by Spark-count class 0, 1, 2, 3+ because that class drives the state transition, the bonus
-/// trigger, and bonus escalation.
-/// </summary>
+// Every 40^5 stop combination of one reel set. Awards are integer hundredths of a bet summed in Int128, so the
+// moments are exact. Split by Spark count (0/1/2/3+) because that count drives transitions, triggers and escalation.
 public sealed class ReelSetDistribution
 {
     public const int Classes = 4;
-    /// <summary>Lower edges of the win-distribution buckets, in multiples of bet. Bucket 0 is exactly zero.</summary>
     public static readonly double[] BucketEdges = [0, 0.000001, 1, 2, 5, 10, 20, 50, 100];
     public static readonly string[] BucketLabels = ["0", "(0, 1)", "[1, 2)", "[2, 5)", "[5, 10)", "[10, 20)", "[20, 50)", "[50, 100)", "100+"];
 
@@ -26,7 +20,7 @@ public sealed class ReelSetDistribution
 
     public double ClassProbability(int c) => (double)ClassCount[c] / Combinations;
     public double ClassZeroProbability(int c) => (double)ClassZeroCount[c] / Combinations;
-    /// <summary>E[award x 1{class = c}] in bet units.</summary>
+// E[award * 1{class = c}], in bets
     public double ClassAwardMoment(int c) => (double)ClassAwardSum[c] / Scale / Combinations;
     public double ExpectedAward => Enumerable.Range(0, Classes).Sum(ClassAwardMoment);
     public double ExpectedAwardSquared =>
@@ -145,7 +139,6 @@ public sealed record StateCycleStatistics(
 
 public sealed record ConfidenceBand(long Spins, double LowerRtp90, double UpperRtp90, double LowerRtp95, double UpperRtp95);
 
-/// <summary>Industry PAR-sheet statistics, all exact (enumeration + closed-form Markov algebra).</summary>
 public sealed record ParStatistics(
     double Rtp,
     double Variance,
@@ -162,21 +155,11 @@ public sealed record ParStatistics(
     IReadOnlyList<ConfidenceBand> ConfidenceBands,
     IReadOnlyList<(long Spins, double ExpectedRtp)> SessionRtpFromRest)
 {
-    /// <summary>Ratio of the true (correlated) long-run variance to the i.i.d. variance. 1.0 means no correction.</summary>
     public double CorrelationFactor => AsymptoticVariance / Variance;
 }
 
-/// <summary>
-/// Combines exact reel-set distributions into whole-game statistics:
-/// <list type="bullet">
-/// <item>Feature first/second moments by backward induction (escalation and award are correlated via Sparks, so the
-/// recursion conditions on the Spark class rather than multiplying independent means).</item>
-/// <item>Per-state cycle moments, stationary variance, standard deviation and volatility index.</item>
-/// <item>Asymptotic variance of the Markov additive process: sigma^2_inf = Var(X) + 2 sum_k Cov(X_0, X_k), in closed
-/// form through the fundamental matrix. This is the variance a confidence interval on simulated RTP must use.</item>
-/// <item>Relative state values v = Z(m - mu): how much more future return a machine in Taut holds than one in Rest.</item>
-/// </list>
-/// </summary>
+// Feature second moments condition on the Spark class: the spin that extends the feature is correlated with its
+// own award. sigma^2_inf = Var(X) + 2 sum_k Cov(X_0, X_k) comes from the fundamental matrix.
 public sealed class ParAnalyzer
 {
     private readonly GameConfiguration _configuration;
@@ -190,7 +173,6 @@ public sealed class ParAnalyzer
 
     public IReadOnlyDictionary<string, ReelSetDistribution> Distributions => _distributions;
 
-    /// <summary>Enumerates every reel set once; identical strip sets (BASE_OVERDRIVE = BONUS_REST) share one pass.</summary>
     public static Dictionary<string, ReelSetDistribution> EnumerateAll(GameConfiguration configuration)
     {
         var groups = configuration.GroupByStrips().ToArray();

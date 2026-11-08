@@ -19,8 +19,7 @@ public sealed class ExposureAndStateTests
     [Fact]
     public void MaximumOnlyCombinesReachableEvents()
     {
-        // Regression for the v1.0 defect: with one fewer base Spark per reel, BASE_REST has no Sparks, Rest is
-        // absorbing and the feature cannot trigger. v1.0 still reported ~11,227x by adding an impossible feature.
+        // BASE_REST loses its Sparks, so Rest is absorbing and the feature can't trigger. v1.0 reported ~11,227x here.
         var lowSpark = SensitivityRunner.WithBaseSparkDelta(_config, -1);
         var extremes = new ExtremeAnalyzer(lowSpark).Analyze();
         var rest = extremes.ReelSets["BASE_REST"];

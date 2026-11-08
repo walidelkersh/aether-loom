@@ -1,9 +1,6 @@
 namespace SlotGame.Core;
 
-/// <summary>
-/// Maximum single-spin award in a reel set, split by Spark count. A <c>null</c> category means no stop combination
-/// produces that Spark count, so the branch is impossible (not "possible with a zero award").
-/// </summary>
+// null = no stop combination gives that Spark count, i.e. the branch is impossible, not worth zero.
 public sealed record ReelSetExtremes(
     string ReelSet,
     double MaximumAnyAward,
@@ -19,11 +16,7 @@ public sealed record ExtremeMathReport(
     double MaximumBaseAward,
     double MaximumGameCycleAward);
 
-/// <summary>
-/// Exposure analysis: the largest award of one paid cycle (base spin plus any feature it triggers).
-/// Only event sequences that can actually occur are combined: base states must be reachable from Rest, and a
-/// feature value is added only when a 3+ Spark outcome exists in that state's reel set.
-/// </summary>
+// Only combines events that can happen: base states reachable from Rest, and feature value only where 3+ Sparks exist.
 public sealed class ExtremeAnalyzer
 {
     private const int ProductRadix = 244;

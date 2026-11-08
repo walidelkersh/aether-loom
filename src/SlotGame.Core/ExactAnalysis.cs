@@ -25,10 +25,7 @@ public sealed record TheoreticalMathReport(
     double BaseHitProbability,
     IReadOnlyList<double> ConditionalStateRtp)
 {
-    /// <summary>
-    /// Return per unit wagered when the player bets b[s] in state s. Equals TotalRtp only for a constant bet;
-    /// with a shared state this is the bet-switching exploit measure: sum(pi b r) / sum(pi b).
-    /// </summary>
+    // sum(pi b r) / sum(pi b). Equals TotalRtp only for a constant bet.
     public double WagerWeightedReturn(IReadOnlyList<double> betByState)
     {
         double paid = 0, wagered = 0;

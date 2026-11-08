@@ -14,15 +14,12 @@ public sealed class Paytable
 
     public IReadOnlyCollection<SymbolId> PayingSymbols => _symbols;
 
-    /// <summary>Exact pay (x total bet, per way) as configured. Use for settlement and rational analysis.</summary>
     public decimal GetExact(SymbolId symbol, int reels) =>
         _pays.TryGetValue(symbol, out var counts) && counts.TryGetValue(reels, out var pay) ? pay : 0m;
 
-    /// <summary>Binary floating-point pay for fast statistical analysis.</summary>
     public double Get(SymbolId symbol, int reels) => (double)GetExact(symbol, reels);
     public IReadOnlyDictionary<int, decimal> For(SymbolId symbol) => _pays[symbol];
 
-    /// <summary>Smallest power of ten that turns every pay into an integer (100 for two-decimal pays).</summary>
     public long IntegerScale
     {
         get
@@ -160,10 +157,7 @@ public sealed class GameConfiguration
             throw new InvalidOperationException("Feature spin limits are inconsistent.");
     }
 
-    /// <summary>
-    /// Reel sets whose ordered strips are identical. BASE_OVERDRIVE and BONUS_REST intentionally share strips,
-    /// so the game has six named sets but five distinct physical configurations.
-    /// </summary>
+    // BASE_OVERDRIVE and BONUS_REST share strips: six named sets, five distinct.
     public IReadOnlyList<IReadOnlyList<string>> SharedStripGroups() => GroupByStrips()
         .Where(group => group.Count() > 1)
         .Select(group => (IReadOnlyList<string>)group.Select(set => set.Name).ToArray())

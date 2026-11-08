@@ -22,12 +22,7 @@ public sealed class SimulationRunner
     private readonly GameConfiguration _configuration;
     public SimulationRunner(GameConfiguration configuration) => _configuration = configuration;
 
-    /// <summary>
-    /// Seeded Monte Carlo of the production state loop at a constant 1.00 bet, starting in Rest.
-    /// Two confidence intervals are reported: the textbook i.i.d. interval, and a batch-means interval
-    /// (spins split into contiguous batches far longer than the chain's memory) that stays valid when
-    /// consecutive paid spins are correlated through the persistent state.
-    /// </summary>
+    // Batch means stay valid when spins are correlated through the tension state; the i.i.d. interval does not.
     public SimulationReport Run(long paidSpins, ulong seed, Action<long>? progress = null, int batches = DefaultBatches)
     {
         if (paidSpins <= 0) throw new ArgumentOutOfRangeException(nameof(paidSpins));
@@ -108,11 +103,7 @@ public sealed record BetSwitchReport(StatePolicy Policy, long PaidSpins, double 
 
 public static class BetSwitchRunner
 {
-    /// <summary>
-    /// Adversarial player: minimum bet while the visible state for the maximum bet is Rest, maximum bet otherwise.
-    /// Under <see cref="StatePolicy.SharedAcrossBets"/> tension built at 0.20 is spent at 10.00 (the v1.0 exploit).
-    /// Under <see cref="StatePolicy.PerBetLevel"/> the maximum-bet state can only advance through maximum-bet spins.
-    /// </summary>
+    // Min bet while the max-bet state is Rest, max bet otherwise.
     public static BetSwitchReport Run(GameConfiguration configuration, StatePolicy policy, long spins, ulong seed)
     {
         var engine = new GameEngine(configuration, new Pcg32Random(seed));

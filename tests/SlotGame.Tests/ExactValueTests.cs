@@ -2,18 +2,12 @@ using SlotGame.Core;
 
 namespace SlotGame.Tests;
 
-/// <summary>
-/// Pins the headline figures to values computed OUTSIDE this C# code base, by
-/// scripts/independent_check.py (pure Python written from the game rules in docs/game-design.md, using
-/// fractions.Fraction, sharing no code with SlotGame.Core). A wrong rule in the shared C# core would make the
-/// engine, simulator and analyzers agree with each other and still fail here.
-/// </summary>
+// Reference values come from scripts/independent_check.py, which shares no code with SlotGame.Core.
 public sealed class ExactValueTests
 {
     private static readonly GameConfiguration Config = GameConfiguration.LoadDefault();
     private static readonly Lazy<ParStatistics> Par = new(() => new ParAnalyzer(Config).Analyze());
 
-    // Independent reference values (scripts/independent_check.py, 15 significant digits).
     private const double ReferenceBaseRtp = 0.804316415315999;
     private const double ReferenceFeatureRtp = 0.161352733018644;
     private const double ReferenceTotalRtp = 0.965669148334642;

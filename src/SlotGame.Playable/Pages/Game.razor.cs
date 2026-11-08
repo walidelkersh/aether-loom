@@ -30,12 +30,10 @@ public partial class Game : IAsyncDisposable
     private SymbolId[,] _grid;
     private SpinResult? _currentSpin;
     private BaseSpinResult? _currentBase;
-    // Persistent tension is owned per bet level and cleared on reset, so state built at a small bet can never be
-    // spent at a large one (the v1.0 bet-switching exploit, 152% wager-weighted return; see docs/advantage-play.md).
+    // Per bet level, so tension built at a small bet can't be spent at a large one.
     private readonly StateLedger _ledger = new(StatePolicy.PerBetLevel);
     private TensionState _state => _ledger.StateFor(_bet);
     private TensionState _displayStage;
-    // Credits are decimal: 0.07 x 3 ways x 0.20 must settle to exactly 0.042.
     private decimal _balance = 1000m;
     private decimal _bet = 1m;
     private decimal _lastAward;

@@ -1,6 +1,5 @@
 namespace SlotGame.Simulation;
 
-/// <summary>Welford's online mean/variance: numerically stable over hundreds of millions of observations.</summary>
 public sealed class OnlineMoments
 {
     public long Count { get; private set; }
@@ -21,7 +20,6 @@ public sealed class OnlineMoments
     public double StandardDeviation => Math.Sqrt(PopulationVariance);
     public double SampleVariance => Count < 2 ? 0 : M2 / (Count - 1);
 
-    /// <summary>Textbook interval. Valid only if observations are independent; see batch means for correlated spins.</summary>
     public double MeanConfidenceHalfWidth95 => Count < 2 ? 0 : 1.959964 * Math.Sqrt(SampleVariance / Count);
 }
 
@@ -29,7 +27,6 @@ public sealed record ChiSquareResult(double Statistic, int DegreesOfFreedom, dou
 
 public static class Statistics
 {
-    /// <summary>Two-sided 95% Student-t critical value (exact table for small df, Cornish-Fisher expansion beyond).</summary>
     public static double StudentT975(int df)
     {
         double[] table = [double.NaN, 12.706, 4.303, 3.182, 2.776, 2.571, 2.447, 2.365, 2.306, 2.262, 2.228,
@@ -41,10 +38,7 @@ public static class Statistics
         return z + (z * z * z + z) / (4 * df) + (5 * Math.Pow(z, 5) + 16 * z * z * z + 3 * z) / (96.0 * df * df);
     }
 
-    /// <summary>
-    /// Pearson goodness-of-fit of observed bucket counts against exact probabilities. Buckets with expected count
-    /// below 5 are pooled into their neighbour, the standard validity rule for the chi-square approximation.
-    /// </summary>
+    // Buckets expected below 5 are pooled into a neighbour.
     public static ChiSquareResult ChiSquare(IReadOnlyList<long> observed, IReadOnlyList<double> probabilities)
     {
         var total = observed.Sum();
@@ -77,7 +71,7 @@ public static class Statistics
         return new ChiSquareResult(statistic, df, 1 - RegularizedGammaP(df / 2.0, statistic / 2.0), pooledFrom);
     }
 
-    /// <summary>Regularized lower incomplete gamma P(a, x) (Numerical Recipes series / continued fraction).</summary>
+    // Numerical Recipes series / continued fraction.
     public static double RegularizedGammaP(double a, double x)
     {
         if (x <= 0) return 0;

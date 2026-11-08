@@ -37,14 +37,14 @@ table.tight td, table.tight th { padding: 1pt 4pt; font-size: 7.5pt; }
 </div>
 <table class="text"><thead><tr><th>Item</th><th>Specification</th></tr></thead><tbody><tr><td>Format</td><td>5 reels × 3 rows, 243 ways, left to right, 3+ consecutive reels</td></tr><tr><td>Bets</td><td>0.20, 0.50, 1.00, 2.00, 5.00, 10.00 fictional credits</td></tr><tr><td>Wild</td><td>Substitutes for all paying symbols; never on reel 1; no direct pay</td></tr><tr><td>Spark (scatter)</td><td>2 on a paid spin raise tension; 3+ trigger the feature; no direct pay</td></tr><tr><td>Tension</td><td>Rest / Taut / Overdrive; selects the next base reel set; stored per bet level, cleared on cash-out</td></tr><tr><td>Feature</td><td>7 free spins at the earned stage, cap 12; 2+ Sparks add a spin and raise the stage; multipliers 1.0× / 1.75× / 3.5×</td></tr><tr><td>Jackpot</td><td>None</td></tr></tbody></table>
 <p class="note">Demonstration document for a fictional-credit portfolio game. Not a regulatory submission or certification.
-Configuration SHA-256 9959f5e5e14a. Every number is generated from reports/*.json by scripts/generate_docs.py.</p>
+Configuration SHA-256 59f14982727e. Every number is generated from reports/*.json by scripts/generate_docs.py.</p>
 </section>
 
 <h2>1. Paytable (× total bet, per way)</h2>
 <table class=""><thead><tr><th>Symbol</th><th>3 reels</th><th>4 reels</th><th>5 reels</th></tr></thead><tbody><tr><td>CROWN</td><td>0.40</td><td>1.20</td><td>4.00</td></tr><tr><td>MOTH</td><td>0.30</td><td>0.90</td><td>2.50</td></tr><tr><td>SHUTTLE</td><td>0.20</td><td>0.60</td><td>1.50</td></tr><tr><td>DYE</td><td>0.15</td><td>0.40</td><td>1.00</td></tr><tr><td>LINEN</td><td>0.10</td><td>0.25</td><td>0.60</td></tr><tr><td>KNOT</td><td>0.07</td><td>0.15</td><td>0.40</td></tr></tbody></table>
 
 <h2>2. RTP budget</h2>
-<table class=""><thead><tr><th>Component</th><th>Exact</th></tr></thead><tbody><tr><td>Base 243-ways wins</td><td>80.431642%</td></tr><tr><td>Feature</td><td>16.135273%</td></tr><tr><td><b>Total</b></td><td><b>96.566915%</b></td></tr><tr><td>Exact fraction, 20 dp</td><td>0.96566914833464226035</td></tr></tbody></table>
+<table class=""><thead><tr><th>Component</th><th>Exact</th></tr></thead><tbody><tr><td>Base 243-ways wins</td><td>80.431642%</td></tr><tr><td>Feature</td><td>16.135273%</td></tr><tr><td><b>Total</b></td><td><b>96.566915%</b></td></tr></tbody></table>
 <div class="formula">RTP = Σ<sub>s</sub> π<sub>s</sub> (B<sub>s</sub> + t<sub>s</sub> F<sub>s</sub>), &nbsp; πP = π, &nbsp; Σπ<sub>s</sub> = 1</div>
 
 <h2>3. Base-state Markov chain</h2>
@@ -62,7 +62,7 @@ Configuration SHA-256 9959f5e5e14a. Every number is generated from reports/*.jso
 <table class=""><thead><tr><th>Paid spins</th><th>90% band</th><th>95% band</th></tr></thead><tbody><tr><td>1,000</td><td>76.53% – 116.60%</td><td>72.70% – 120.44%</td></tr><tr><td>10,000</td><td>90.23% – 102.90%</td><td>89.02% – 104.12%</td></tr><tr><td>100,000</td><td>94.56% – 98.57%</td><td>94.18% – 98.95%</td></tr><tr><td>1,000,000</td><td>95.93% – 97.20%</td><td>95.81% – 97.32%</td></tr><tr><td>10,000,000</td><td>96.37% – 96.77%</td><td>96.33% – 96.81%</td></tr></tbody></table>
 
 <h2>7. Verification</h2>
-<table class="text"><thead><tr><th>Check</th><th>Result</th></tr></thead><tbody><tr><td>Float, rational, enumeration and independent Python RTP</td><td>agree; rational and Python fractions identical</td></tr><tr><td>Simulated RTP, 10,000,000 spins</td><td>96.6390% (z = +0.59, correlation-corrected)</td></tr><tr><td>95% CI half-width: i.i.d. / batch means / exact σ∞</td><td>±0.2402% / ±0.2582% / ±0.2387%</td></tr><tr><td>Chi-square, base win distribution</td><td>χ² = 5.64, df = 6, p = 0.464</td></tr><tr><td>Bet-switch player: shared state (v1.0) / per-bet state (v1.1)</td><td>153.47% / 96.74%</td></tr></tbody></table>
+<table class="text"><thead><tr><th>Check</th><th>Result</th></tr></thead><tbody><tr><td>Analyzer, 40⁵ enumeration and independent Python RTP</td><td>agree to 1e-12</td></tr><tr><td>Simulated RTP, 10,000,000 spins</td><td>96.6390% (z = +0.59, correlation-corrected)</td></tr><tr><td>95% CI half-width: i.i.d. / batch means / exact σ∞</td><td>±0.2402% / ±0.2582% / ±0.2387%</td></tr><tr><td>Chi-square, base win distribution</td><td>χ² = 5.64, df = 6, p = 0.464</td></tr><tr><td>Bet-switch player: shared state (v1.0) / per-bet state (v1.1)</td><td>153.47% / 96.74%</td></tr></tbody></table>
 
 <h2>8. Reel strip symbol counts</h2>
 <p class="note">Six named sets, five distinct strip configurations (BASE_OVERDRIVE = BONUS_REST). Ordered strips: docs/reel-strips.md.</p>

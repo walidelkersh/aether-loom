@@ -2,7 +2,7 @@
 
 # Aether Loom: slot game mathematics, end to end
 
-[**PLAY LIVE**](https://walidelkersh.github.io/aether-loom/) · [**PAR SHEET (PDF)**](docs/PAR-sheet.pdf) · [**MATH REPORT**](docs/math-report.md) · [**VERIFICATION**](docs/verification.md) · [**CASE STUDY**](docs/case-study.md)
+[**PLAY LIVE**](https://walidelkersh.github.io/aether-loom/) · [**PAR SHEET (PDF)**](docs/PAR-sheet.pdf) · [**MATH REPORT**](docs/math.md) · [**VERIFICATION**](docs/math.md#verification) · 
 
 An original 5×3, 243-ways slot designed from physical reel strips up. Spark symbols move a persistent
 **Rest → Taut → Overdrive** tension state that selects the next reel set and becomes the starting stage of a 7–12 spin
@@ -53,7 +53,7 @@ C# engine, simulator and a playable Blazor client, and verified the math several
 | Hand-calculated fixtures | 8-way Crown = 3.20×, 4-reel extension = 7.20×, shared Wild = 0.37×, exact decimal settlement |
 | Adversarial bet-switching player | 153.5% with shared state (v1.0) → 96.7% with per-bet state (v1.1) |
 
-Details and limitations: [docs/verification.md](docs/verification.md).
+Details and limitations: [docs/math.md#verification](docs/math.md#verification).
 
 ## Version 1.1: review findings and fixes
 
@@ -119,6 +119,6 @@ shows I can design, derive, implement and verify a stateful slot model, and that
 
 ## Further reading
 
-[Game design spec](docs/game-design.md) · [Math report](docs/math-report.md) · [Verification](docs/verification.md) · [Advantage play](docs/advantage-play.md) · [Sensitivity](docs/sensitivity-analysis.md) · [Reel strips](docs/reel-strips.md) · [Case study](docs/case-study.md) · [Stake Engine representation](integrations/stake-engine/README.md) · [Art direction](docs/art-direction.md)
+[Game design spec](docs/game-design.md) · [Math report](docs/math.md) · [Verification](docs/math.md#verification) · [Advantage play](docs/advantage-play.md) · [Sensitivity](docs/sensitivity-analysis.md) · [Reel strips](docs/reel-strips.md)
 
 Released under the [MIT License](LICENSE). The symbol atlas and backdrop are original generated assets; no third-party game art is included.

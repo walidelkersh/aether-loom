@@ -1,5 +1,5 @@
 {
-  "generatedAtUtc": "2026-11-08T20:54:28.2110707+00:00",
+  "generatedAtUtc": "2026-11-08T21:29:23.5547985+00:00",
   "Version": "1.1.0",
   "GameName": "Aether Loom",
   "sharedStripGroups": [
@@ -8,21 +8,6 @@
       "BONUS_REST"
     ]
   ],
-  "rational": {
-    "totalRtp": "14663268486287004245716941889560722887377626520833642950534458558203189712920190483/15184567625024307200000000000000000000000000000000000000000000000000000000000000000",
-    "baseRtp": "1908312031294205867811/2372588691410048000000",
-    "featureRtp": "2450071486004086691726541889560722887377626520833642950534458558203189712920190483/15184567625024307200000000000000000000000000000000000000000000000000000000000000000",
-    "featureTriggerProbability": "124746088132202139/29657358642625600000",
-    "stationary": [
-      "17277568000000/18535849151641",
-      "1167045120000/18535849151641",
-      "91236031641/18535849151641"
-    ],
-    "totalRtpDecimal": "0.96566914833464226035",
-    "baseRtpDecimal": "0.80431641531599862554",
-    "featureRtpDecimal": "0.16135273301864363481",
-    "denominatorDigits": 83
-  },
   "exact": {
     "BaseRtp": 0.8043164153159983,
     "FeatureRtp": 0.16135273301863862,
@@ -435,7 +420,6 @@
       "ReelSet": "BASE_REST",
       "combinations": 102400000,
       "expectedAward": 0.7910498627929687,
-      "exactExpectedAward": "1620070119/2048000000",
       "expectedAwardSquared": 2.523470854956055,
       "hitProbability": 0.647859375,
       "maximumAward": 49.6,
@@ -461,7 +445,6 @@
       "ReelSet": "BASE_TAUT",
       "combinations": 102400000,
       "expectedAward": 0.9724699160156252,
-      "exactExpectedAward": "497904597/512000000",
       "expectedAwardSquared": 3.955142241455078,
       "hitProbability": 0.649046875,
       "maximumAward": 42.4,
@@ -487,7 +470,6 @@
       "ReelSet": "BASE_OVERDRIVE",
       "combinations": 102400000,
       "expectedAward": 1.1656982109374998,
-      "exactExpectedAward": "149209371/128000000",
       "expectedAwardSquared": 5.645664452412109,
       "hitProbability": 0.703875,
       "maximumAward": 88,
@@ -513,7 +495,6 @@
       "ReelSet": "BONUS_TAUT",
       "combinations": 102400000,
       "expectedAward": 2.01394508203125,
-      "exactExpectedAward": "515569941/256000000",
       "expectedAwardSquared": 16.368351393457033,
       "hitProbability": 0.7517812500000001,
       "maximumAward": 221.5,
@@ -539,7 +520,6 @@
       "ReelSet": "BONUS_OVERDRIVE",
       "combinations": 102400000,
       "expectedAward": 3.27740417578125,
-      "exactExpectedAward": "839015469/256000000",
       "expectedAwardSquared": 35.218000476054684,
       "hitProbability": 0.832765625,
       "maximumAward": 406,

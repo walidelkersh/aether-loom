@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Generate every human-readable math artifact from the committed machine reports.
 
-Nothing in docs/math-report.md, verification.md, advantage-play.md, sensitivity-analysis.md, reel-strips.md,
+Nothing in docs/math.md, advantage-play.md, sensitivity-analysis.md, reel-strips.md,
 sensitivity.svg or PAR-sheet.html is typed by hand: each number is read from reports/*.json, which the C#
 analyzers and simulator write. Regenerate after any configuration change:
 
@@ -24,7 +24,7 @@ SENSITIVITY, BETSWITCH = load("sensitivity.json"), load("bet-switch.json")
 CONFIG_PATH = ROOT / "config/game-config.json"
 CONFIG = json.loads(CONFIG_PATH.read_text())
 EXACT, SIM, CHI = REPORT["exact"], REPORT["simulation"], REPORT["distributionTest"]
-STATS, RATIONAL, ADV = PAR["statistics"], PAR["rational"], PAR["advantagePlay"]
+STATS, ADV = PAR["statistics"], PAR["advantagePlay"]
 STATE_NAMES = ["Rest", "Taut", "Overdrive"]
 CONFIG_HASH = hashlib.sha256(CONFIG_PATH.read_bytes()).hexdigest()[:12]
 
@@ -63,7 +63,7 @@ sens = {(r["Parameter"], r["Level"]): r for r in SENSITIVITY}
 baseline = sens[("Baseline", "configured")]
 
 # ----------------------------------------------------------------------------------------------- math report
-write("docs/math-report.md", f"""
+MATH_PART = (f"""
 # Aether Loom mathematical model
 
 Model version {CONFIG['version']} · configuration SHA-256 `{CONFIG_HASH}`. Every figure on this page is **exact**
@@ -78,9 +78,8 @@ Model version {CONFIG['version']} · configuration SHA-256 `{CONFIG_HASH}`. Ever
 | Scatter cash awards / jackpots | none |
 | **Total RTP** | **{pct(EXACT['TotalRtp'])}** |
 
-As an exact fraction (BigInteger arithmetic, no floating point), total RTP has a {RATIONAL['denominatorDigits']}-digit
-denominator and equals `{RATIONAL['totalRtpDecimal']}…`. A Python implementation written from the rules alone
-(`scripts/independent_check.py`) produces the identical fraction.
+A Python implementation written from the rules alone, in exact fractions
+(`scripts/independent_check.py`), reproduces it to 1e-12.
 
 $$\\text{{RTP}}=\\sum_{{s}}\\pi_s\\,(B_s+t_sF_s),\\qquad \\pi P=\\pi,\\ \\textstyle\\sum_s\\pi_s=1$$
 
@@ -165,7 +164,7 @@ stationary RTP: """ + ", ".join(f"{s['spins']:,} spins → {pct(s['expectedRtp']
 
 {SIM['PaidSpins']:,} paid spins, PCG32 seed `{SIM['Seed']}`: observed RTP {pct(SIM['ObservedRtp'])}, hit frequency
 {pct(SIM['HitFrequency'], 4)}, SD {SIM['StandardDeviation']:.4f}×, largest observed award {SIM['MaximumObservedWin']:,.2f}×.
-Full comparison in [verification.md](verification.md).
+The full comparison is under Verification below.
 """)
 
 # ------------------------------------------------------------------------------------------------ verification
@@ -177,25 +176,22 @@ rows = [
     ("Base hit frequency", EXACT["BaseHitProbability"], SIM["BaseHitFrequency"]),
     ("Feature frequency", EXACT["FeatureTriggerProbability"], SIM["FeatureFrequency"]),
 ]
-write("docs/verification.md", f"""
+VERIFY_PART = (f"""
 # Verification: how the numbers are known to be right
-
-Model {CONFIG['version']} · configuration SHA-256 `{CONFIG_HASH}`.
 
 The exact model is the source of truth. It is derived three independent ways, and simulation is used as a
 check on the *engine* (does the code that plays the game behave like the math?), never as the source of a number.
 
-## 1. Three independent exact derivations
+## 1. Three exact derivations
 
 | Method | Arithmetic | Shares code with engine? | Total RTP |
 |---|---|---|---|
 | `ExactAnalyzer`: window count distributions, convolution, linear solve, reward recursion | IEEE double | yes (C# core) | {pct(EXACT['TotalRtp'], 12)} |
-| `RationalAnalyzer`: closed-form ways EV, Gaussian elimination over ℚ | BigInteger fractions | partially (strip loader) | identical fraction |
 | `ParAnalyzer`: brute-force enumeration of all 40⁵ stop combinations per reel set | 128-bit integers | partially | {pct(STATS['Rtp'], 12)} |
-| `scripts/independent_check.py`: written from the rules in game-design.md | Python `Fraction` | **no** | identical fraction |
+| `scripts/independent_check.py`: written from the rules in game-design.md | Python `Fraction` | **no** | agrees to 1e-12 |
 
-The closed-form ways EV equals the enumerated ways EV as exact fractions for every reel set
-(`ClosedFormWaysEvEqualsFullEnumerationExactly`). CI runs the Python reference and fails on any difference above 1e-12.
+The window-distribution ways EV equals the enumerated ways EV for every reel set
+(`WindowDistributionEvMatchesFullEnumeration`). CI runs the Python reference and fails on any difference above 1e-12.
 
 ## 2. Hand-calculated fixtures
 
@@ -244,6 +240,10 @@ small and large wins while keeping the mean; a distribution test can.
 - The confidence bands use a normal approximation that is weak for short sessions of a heavy-tailed game.
 - This is a portfolio model. It has not been reviewed by a test laboratory or regulator.
 """)
+
+verify = VERIFY_PART.strip().replace("\n## ", "\n### ")
+verify = verify.replace("# Verification: how the numbers are known to be right", "## Verification", 1)
+write("docs/math.md", MATH_PART.strip() + "\n\n" + verify)
 
 # ------------------------------------------------------------------------------------------------ advantage play
 write("docs/advantage-play.md", f"""
@@ -433,7 +433,7 @@ Configuration SHA-256 {CONFIG_HASH}. Every number is generated from reports/*.js
 {table(['Symbol', '3 reels', '4 reels', '5 reels'], pay_rows)}
 
 <h2>2. RTP budget</h2>
-{table(['Component', 'Exact'], [['Base 243-ways wins', pct(EXACT['BaseRtp'])], ['Feature', pct(EXACT['FeatureRtp'])], ['<b>Total</b>', f"<b>{pct(EXACT['TotalRtp'])}</b>"], ['Exact fraction, 20 dp', RATIONAL['totalRtpDecimal']]])}
+{table(['Component', 'Exact'], [['Base 243-ways wins', pct(EXACT['BaseRtp'])], ['Feature', pct(EXACT['FeatureRtp'])], ['<b>Total</b>', f"<b>{pct(EXACT['TotalRtp'])}</b>"]])}
 <div class="formula">RTP = Σ<sub>s</sub> π<sub>s</sub> (B<sub>s</sub> + t<sub>s</sub> F<sub>s</sub>), &nbsp; πP = π, &nbsp; Σπ<sub>s</sub> = 1</div>
 
 <h2>3. Base-state Markov chain</h2>
@@ -461,7 +461,7 @@ Configuration SHA-256 {CONFIG_HASH}. Every number is generated from reports/*.js
 
 <h2>7. Verification</h2>
 {table(['Check', 'Result'], [
-    ['Float, rational, enumeration and independent Python RTP', 'agree; rational and Python fractions identical'],
+    ['Analyzer, 40⁵ enumeration and independent Python RTP', 'agree to 1e-12'],
     [f"Simulated RTP, {SIM['PaidSpins']:,} spins", f"{pct(SIM['ObservedRtp'], 4)} (z = {z_exact:+.2f}, correlation-corrected)"],
     ['95% CI half-width: i.i.d. / batch means / exact σ∞', f"±{pct(SIM['RtpConfidenceHalfWidth95Iid'], 4)} / ±{pct(SIM['RtpConfidenceHalfWidth95BatchMeans'], 4)} / ±{pct(exact_half, 4)}"],
     ['Chi-square, base win distribution', f"χ² = {CHI['Statistic']:.2f}, df = {CHI['DegreesOfFreedom']}, p = {CHI['PValue']:.3f}"],
@@ -474,4 +474,4 @@ Configuration SHA-256 {CONFIG_HASH}. Every number is generated from reports/*.js
 </body></html>"""
 write("docs/PAR-sheet.html", par_html)
 
-print("Generated math-report, verification, advantage-play, sensitivity, reel-strips, sensitivity.svg and PAR-sheet.html.")
+print("Generated math, advantage-play, sensitivity, reel-strips, sensitivity.svg and PAR-sheet.html.")

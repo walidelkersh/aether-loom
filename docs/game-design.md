@@ -1,6 +1,6 @@
-# Aether Loom — game design and math specification
+# Aether Loom game design
 
-Status: pre-implementation specification, version 0.1. Numeric outputs in this document are design inputs or targets until replaced by generated verification results.
+The rules the engine implements. Computed results live in [math.md](math.md); the configuration is `config/game-config.json`.
 
 ## Game overview
 
@@ -34,7 +34,7 @@ The relationship between experience and mathematics is explicit:
 - Aether Wild has no separate pay. Reel 1 contains no wild, preventing an all-wild ambiguity at the start of a way.
 - Spark is an anywhere scatter used for state and bonus rules. It has no direct cash award.
 
-## Symbols and initial paytable
+## Symbols and paytable
 
 | Code | Symbol | 3 reels | 4 reels | 5 reels | Role |
 |---|---|---:|---:|---:|---|
@@ -44,27 +44,25 @@ The relationship between experience and mathematics is explicit:
 | DYE | Dye Vial | 0.15 | 0.40 | 1.00 | Medium |
 | LINEN | Linen Roll | 0.10 | 0.25 | 0.60 | Low |
 | KNOT | Weaver's Knot | 0.07 | 0.15 | 0.40 | Low |
-| WILD | Aether Wild | — | — | — | Substitute |
-| SPARK | Spark | — | — | — | Scatter/state |
-
-The final paytable and strip counts may be tuned before version 1.0. Any tuning must be committed in inspectable configuration and all reports regenerated from that configuration.
+| WILD | Aether Wild | | | | Substitute |
+| SPARK | Spark | | | | Scatter/state |
 
 ## Reel architecture
 
 Every reel is a circular ordered strip. A uniformly selected stop is the top visible symbol; the next two strip positions form the middle and bottom symbols. Base states and feature stages use separate five-reel sets of equal-length strips so state changes are auditable.
 
-Reel sets (the pre-implementation draft specified 48 stops per reel; the implemented and analysed configuration uses **40**):
+Reel sets:
 
 | Set | Use | Length per reel | Constraint |
 |---|---|---:|---|
 | BASE_REST | Base state 0 | 40 | One Spark per reel; no Wild on reel 1 |
 | BASE_TAUT | Base state 1 | 40 | One or two Sparks per reel; no Wild on reel 1 |
-| BASE_OVERDRIVE | Base state 2 | 40 | Two Sparks per reel; increased Wilds on reels 2–5 |
+| BASE_OVERDRIVE | Base state 2 | 40 | Two Sparks per reel; increased Wilds on reels 2-5 |
 | BONUS_REST | Feature stage 0 | 40 | Increased Wilds; no Wild on reel 1 |
 | BONUS_TAUT | Feature stage 1 | 40 | Further increased Wilds; no Wild on reel 1 |
 | BONUS_OVERDRIVE | Feature stage 2 | 40 | Highest Wild density; no Wild on reel 1 |
 
-Spark positions must be separated by at least three strip indices, including across the circular boundary, so one reel cannot show two Sparks in the same 3-row window. Wilds are also spaced to avoid unintended stacked-wild windows. The exact ordered strips live in `config/game-config.json` and are reproduced in [reel-strips.md](reel-strips.md) and the PAR sheet.
+Spark positions are separated by at least three strip indices, including across the circular boundary, so one reel cannot show two Sparks in the same 3-row window. Wilds are also spaced to avoid unintended stacked-wild windows. The exact ordered strips live in `config/game-config.json` and are reproduced in [reel-strips.md](reel-strips.md) and the PAR sheet.
 
 **Shared strips.** BASE_OVERDRIVE and BONUS_REST use identical ordered strips, so the game has six named reel sets but five distinct physical configurations. All three bonus sets also have the same Spark distribution, which is why expected feature duration (8.370532 spins) does not depend on the starting stage. `GameConfiguration.SharedStripGroups()` reports this and a test pins it.
 
@@ -92,51 +90,14 @@ This creates a three-state Markov chain whose transition matrix is calculated fr
 - Escalation: two or more Sparks on a feature spin advance the stage by one, to a maximum of stage 2, and award one additional free spin.
 - Bound: at most 12 feature spins are played, including awarded spins.
 - Feature Sparks do not pay cash directly.
-- State scope (added in v1.1): tension is stored **per bet level** and is cleared when the session ends. A state earned at one bet cannot be spent at another, and a saved state is never left on the machine for the next player. See [advantage-play.md](advantage-play.md) for why v1.0's single shared state was exploitable.
-- There is no separate arbitrary win cap in the demonstration model. The finite strips, paytable, seven initial spins, and 12-spin feature bound produce an exact maximum game-cycle award of 11,227.60× bet in version 1.0. The `ExtremeAnalyzer` derives this value from reachable window profiles and bonus transitions.
+- Tension is stored per bet level and cleared when the session ends, so state earned at one bet can't be spent at another ([advantage-play.md](advantage-play.md)).
+- There is no separate win cap. The strips, paytable and 12-spin bound give a reachable maximum of 11,227.60× bet per paid cycle.
 
 The bonus is evaluated as a finite Markov reward process. Exact per-stage transition probabilities and conditional expected awards feed a dynamic program indexed by stage, spins remaining, and spins already played. Simulation independently exercises the state loop.
 
-## RTP budget and mathematical goals
+## Design targets
 
-The intended total RTP range is 94%–97%. This is a design range, not a result. The implemented model will report:
-
-\[
-RTP_{total}=RTP_{base\ ways}+RTP_{feature}.
-\]
-
-Base ways RTP is averaged across the stationary base-state distribution. Feature RTP weights the exact trigger probability and exact expected feature value for each possible inherited starting stage. Spark has no direct cash RTP and there is no jackpot component.
-
-Other goals:
-
-- feature frequency should be infrequent enough to feel distinct while still observable in a short demo session;
-- the Overdrive reel set should have higher conditional RTP and higher variance than Rest;
-- the stage multipliers and wild density should make late feature spins materially more volatile;
-- long-run maximum exposure must remain bounded by the finite feature duration and derived from reachable strip windows;
-- reported theoretical quantities must be generated from the exact strips and rules;
-- simulation estimates must include sample size, seed, and a 95% normal confidence interval for RTP.
-
-## Analysis classification
-
-Planned exact calculations:
-
-- per-reel stop and visible-window distributions;
-- scatter-count distribution per reel set;
-- base-state transition matrix and stationary distribution;
-- per-symbol ways expected value per reel set;
-- feature-entry probability;
-- finite-state expected feature value and expected duration;
-- maximum award implied by the paytable, ways rules, multipliers, and cap.
-
-- (v1.1) full single-spin award distribution of every reel set by enumerating all 40^5 stop combinations, which makes hit frequency, variance, standard deviation, volatility index, the win distribution, and the correlation-corrected long-run variance exact as well.
-
-Planned simulation estimates:
-
-- total and component RTP as an implementation check against the exact model;
-- hit frequency and variance (cross-checked against the exact values);
-- empirical feature frequency and duration;
-- observed maximum win;
-- RTP confidence interval;
-- sensitivity effects on hit rate and volatility where exact calculation is not practical.
-
-No result is considered verified until the C# test suite, exact analyzer, and seeded simulation agree within the documented statistical tolerance.
+- Total RTP between 94% and 97%, with no jackpot and no direct Spark pay.
+- A feature that is rare enough to feel distinct but still shows up in a short session.
+- Overdrive with a clearly higher conditional return than Rest, and late feature spins that are more volatile than early ones.
+- Exposure bounded by the 12-spin cap rather than an arbitrary win cap.

@@ -193,9 +193,7 @@ public sealed class ParAnalyzer
     /// <summary>Enumerates every reel set once; identical strip sets (BASE_OVERDRIVE = BONUS_REST) share one pass.</summary>
     public static Dictionary<string, ReelSetDistribution> EnumerateAll(GameConfiguration configuration)
     {
-        var groups = configuration.ReelSets.Values
-            .GroupBy(set => string.Join("|", set.Reels.Select(r => string.Concat(r.Stops.Select(s => (char)('A' + (int)s))))))
-            .ToArray();
+        var groups = configuration.GroupByStrips().ToArray();
         var computed = new ReelSetDistribution[groups.Length];
         Parallel.For(0, groups.Length, i => computed[i] = ReelSetDistribution.Enumerate(groups[i].First(), configuration.Paytable));
         var result = new Dictionary<string, ReelSetDistribution>(StringComparer.Ordinal);

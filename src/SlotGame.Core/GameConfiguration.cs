@@ -164,11 +164,13 @@ public sealed class GameConfiguration
     /// Reel sets whose ordered strips are identical. BASE_OVERDRIVE and BONUS_REST intentionally share strips,
     /// so the game has six named sets but five distinct physical configurations.
     /// </summary>
-    public IReadOnlyList<IReadOnlyList<string>> SharedStripGroups() => ReelSets.Values
-        .GroupBy(set => string.Join("|", set.Reels.Select(reel => string.Concat(reel.Stops.Select(s => (char)('A' + (int)s))))))
+    public IReadOnlyList<IReadOnlyList<string>> SharedStripGroups() => GroupByStrips()
         .Where(group => group.Count() > 1)
         .Select(group => (IReadOnlyList<string>)group.Select(set => set.Name).ToArray())
         .ToArray();
+
+    public IEnumerable<IGrouping<string, ReelSet>> GroupByStrips() => ReelSets.Values
+        .GroupBy(set => string.Join("|", set.Reels.Select(reel => string.Concat(reel.Stops.Select(s => (char)('A' + (int)s))))));
 
     private static void ValidateSpacing(ReelStrip reel, SymbolId symbol, string setName)
     {

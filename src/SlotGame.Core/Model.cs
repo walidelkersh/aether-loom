@@ -3,8 +3,6 @@ namespace SlotGame.Core;
 public enum SymbolId { Crown, Moth, Shuttle, Dye, Linen, Knot, Wild, Spark }
 public enum TensionState { Rest = 0, Taut = 1, Overdrive = 2 }
 
-public sealed record SymbolDefinition(SymbolId Id, string DisplayName, bool IsWild = false, bool IsScatter = false);
-
 /// <summary>One symbol's ways win. <see cref="Multiplier"/> is the paytable value per way, in units of total bet.</summary>
 public sealed record SymbolWin(SymbolId Symbol, int ReelsMatched, int Ways, decimal Multiplier)
 {
